@@ -1,0 +1,133 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// HOMEPAGE CSS
+
+// slider
+#slider-wrapper {
+}
+.slider {
+    .lt-sec,
+    .rt-sec {
+        width: 100%;
+        @include min-width($md-min) {
+        }
+        @include min-width($lg-min) {
+        }
+        @include min-width($xl-min) {
+            width: 24%;
+        }
+    }
+    .ct-sec {
+        width: 100%;
+        @include min-width($md-min) {
+        }
+        @include min-width($lg-min) {
+        }
+        @include min-width($xl-min) {
+            width: 52%;
+        }
+    }
+}
+
+// our brands
+#our-brands-wrapper {
+}
+.our-brands {
+    .swiper-slide-item {
+        .inner {
+            // height: 100px;
+        }
+        // img {
+        //     max-height: 100%;
+        // }
+    }
+}
+
+// categories
+#categories-wrapper {
+}
+.categories {
+    .item {
+        .img-sec {
+            height: 100px;
+            width: 100px;
+
+            @include min-width($md-min) {
+                height: 120px;
+                width: 120px;
+            }
+
+            @include min-width($lg-min) {
+                height: 160px;
+                width: 160px;
+            }
+        }
+    }
+}
+
+// slider 2
+#slider2-wrapper {
+}
+.slider2 {
+    .home-slider2-navigation {
+        .icon {
+            height: 40px;
+            width: 40px;
+            line-height: 0;
+            top: 50%;
+            transform: transform_translatey(-50%);
+            z-index: 2;
+            @include transition;
+            opacity: 0.8;
+            &:hover {
+                opacity: 1;
+            }
+            &.lt {
+                left: 15px;
+            }
+            &.rt {
+                right: 15px;
+            }
+        }
+    }
+}
+
+// products
+#products-wrapper {
+}
+.products {
+    .nav-item-in-prods {
+    }
+    .nav-link-in-prods {
+        padding: 15px 30px;
+        border-radius: 0;
+        font-size: 18px;
+        background: $bg__light-gray;
+        color: $text__light-color;
+        &.current-active {
+            background: $primary-color !important;
+            color: #fff !important;
+        }
+    }
+
+    .tab-pane {
+        // padding: 20px;
+    }
+}
+
+// main products
+#main-products-wrapper {
+}
+.main-products {
+    @include min_width($lg-min) {
+        .st-product-item-in-prods {
+            width: 20%;
+        }
+    }
+}
+
+// four blocks section
+#four-blocks-section {}
+.four-blocks-section {}

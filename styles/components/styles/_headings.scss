@@ -1,0 +1,34 @@
+/* HEADING STYLES */
+.st-heading-wrapper {
+    /* SIZES */
+
+    .st-heading {
+        font-size: 45px;
+        .icon {
+            background: url("../../../public/images/spin_leaf_bg.png") no-repeat
+                center / auto 130px;
+            height: 40px;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: calc(50% - 20px);
+                height: 100%;
+                width: 40px;
+                background: url("../../../public/images/logo-leaf.png") no-repeat
+                    center / 40px;
+                -webkit-animation: spin 3s linear infinite;
+                animation: spin 3s linear infinite;
+            }
+        }
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

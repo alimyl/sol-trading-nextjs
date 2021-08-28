@@ -1,0 +1,58 @@
+// COMMON MARGIN AND PADDING
+$gutter_default: 30px;
+$gutter_lg: 50px;
+$gutter_xl: 80px;
+
+// margin
+.st-def-mar-T,
+.st-def-mar-TB {
+    margin-top: $gutter_default;
+
+    @include min_width($lg-min) {
+        margin-top: $gutter_lg;
+    }
+
+    @include min_width($xl-min) {
+        margin-top: $gutter_xl;
+    }
+}
+
+.st-def-mar-B,
+.st-def-mar-TB {
+    margin-bottom: $gutter_default;
+
+    @include min_width($lg-min) {
+        margin-bottom: $gutter_lg;
+    }
+
+    @include min_width($xl-min) {
+        margin-bottom: $gutter_xl;
+    }
+}
+
+// padding
+.st-def-pad-T,
+.st-def-pad-TB {
+    padding-top: $gutter_default;
+
+    @include min_width($lg-min) {
+        padding-top: $gutter_lg;
+    }
+
+    @include min_width($xl-min) {
+        padding-top: $gutter_xl;
+    }
+}
+
+.st-def-pad-B,
+.st-def-pad-TB {
+    padding-bottom: $gutter_default;
+
+    @include min_width($lg-min) {
+        padding-bottom: $gutter_lg;
+    }
+
+    @include min_width($xl-min) {
+        padding-bottom: $gutter_xl;
+    }
+}

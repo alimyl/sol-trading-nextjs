@@ -1,0 +1,121 @@
+/* SCROLLBAR */
+@import "styles/scrollbar";
+
+/* COLORS STYLES */
+@import "styles/colors";
+
+/* BUTTONS STYLES */
+@import "styles/buttons";
+
+/* TEXT STYLES */
+@import "styles/text";
+
+/* HEADING STYLES */
+@import "styles/headings";
+
+/* FORMS STYLES */
+@import "styles/form";
+
+/* FLEX RELATED CLASSES */
+@import "styles/flex";
+
+/* CURSOR RELATED CLASSES */
+@import "styles/cursor";
+
+/* MENU  STYLES */
+@import "styles/menu";
+
+/* MENU  STYLES */
+@import "styles/st-gutter";
+
+/* IMAGE  STYLES */
+@import "styles/images";
+
+/* MODALS  STYLES */
+@import "styles/modals";
+
+// SWIPPER JS
+.swiper-pagination-bullet-active {
+    background-color: $primary-color !important;
+}
+.swiper-pagination-bullet {
+    height: 12px !important;
+    width: 12px !important;
+}
+.swiper-button-prev:after,
+.swiper-button-next:after {
+    color: #fff;
+    font-size: 20px !important;
+}
+
+.swiper-button-prev,
+.swiper-container-rtl .swiper-button-next {
+    left: 15px !important;
+}
+.swiper-button-prev,
+.swiper-button-next,
+.swiper-container-rtl .swiper-button-prev {
+    right: 15px !important;
+}
+
+// ST PRODUCT ITEM
+.st-product-item {
+    .product-img {
+        border-color: $light-gray-color;
+        height: 200px;
+        @include transition;
+        @include min_width($md-min) {
+            height: 250px;
+        }
+    }
+    .product-details {
+        .name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+    }
+    > .inner {
+        &:hover {
+            .product-img {
+                border-color: darken(
+                    $color: $light-gray-color,
+                    $amount: 30
+                ) !important;
+            }
+        }
+    }
+}
+
+/* DEFAULT TITLE STYLE */
+.app-title {
+    @include min-width($lg-min) {
+        position: relative;
+        &[data-title]:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            top: calc(100% + 5px);
+            right: 5px;
+            background: $text__light-color;
+            padding: 3px 8px 4px;
+            color: #fff;
+            white-space: nowrap;
+            display: block;
+            z-index: 99999;
+            box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+            font-size: 10px;
+        }
+    }
+}
+
+
+// app thumb slider
+.app-thumb-slider {
+    .swiper-slide-thumb-active {
+        >.inner {
+            border-color: $primary-color !important;
+            cursor: default !important;
+        }
+    }
+}

@@ -1,0 +1,27 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+/* BREADCRUMBS CSS */
+#st-breadcrumbs-wrapper {
+}
+.st-breadcrumbs {
+    .item {
+        &:not(:last-child) {
+            padding-right: 15px;
+            margin-right: 10px;
+            &::after {
+                content: "/";
+                position: absolute;
+                top: 1px;
+                right: 0;
+                font-size: 12.5px;
+            }
+        }
+        &:last-child {
+            pointer-events: none !important;
+        }
+    }
+    .st-breadcrumbs-link {
+    }
+}

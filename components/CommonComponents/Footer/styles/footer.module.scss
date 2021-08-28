@@ -1,0 +1,15 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+/* FOOTER CSS */
+#footer-main-wrapper {
+
+}
+.footer-main {
+    .footer-main-item {
+        @include min_width($lg-min) {
+            // width: 20%;
+        }
+    }
+}

@@ -1,0 +1,38 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// FORM VARIABLES
+$fieldsHeight: 35px;
+$fieldsHeightAboveSM: 40px;
+
+$defaultInputBorderColor: #cccccc;
+
+// PRODUCT LISTING
+.st-quantity-selector {
+    .st-btn-in-qs {
+        border-color: $defaultInputBorderColor;
+        min-width: $fieldsHeight;
+        @include min-width($sm-min) {
+            min-width: $fieldsHeightAboveSM;
+        }
+    }
+    /* Chrome, Safari, Edge, Opera */
+    .form-control-in-qs::-webkit-outer-spin-button,
+    .form-control-in-qs::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    .form-control-in-qs[type="number"] {
+        -moz-appearance: textfield;
+    }
+    > .inner > .form-control-in-qs {
+        width: 90px;
+        margin: 0 -1px;
+        &:focus {
+            border-color: $defaultInputBorderColor !important;
+        }
+    }
+}

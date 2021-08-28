@@ -1,0 +1,91 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+/* HEADER CSS */
+
+/* message bar */
+#message-bar-wrapper {
+}
+
+.message-bar {
+}
+
+// top bar
+#top-bar-wrapper {
+}
+
+.top-bar {
+}
+
+// cart
+.cart {
+    .cart-container {
+        margin-top: 3px;
+        top: 100%;
+        right: 0;
+        z-index: 2;
+        opacity: 0;
+        visibility: hidden;
+        @include transition;
+        @include min_width($md-min) {
+            width: 350px;
+        }
+        > .cart_inner {
+            border-top: 2px solid $primary-color;
+            @include box-shadow(5px, 5px, 0, 0, rgba(91, 91, 91, 0.2));
+        }
+
+        .cart_listing {
+            > .inner {
+                max-height: 300px;
+                overflow: auto;
+            }
+        }
+
+        // .img {
+        //     width: 70px;
+        // }
+    }
+    &.cart-display {
+    }
+    // show cart
+    &:not(.cart-hidden) {
+        > a {
+            color: $primary-color;
+        }
+        .cart-container {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}
+
+// menu bar
+#main-bar-wrapper {
+
+}
+.main-bar {
+    .mb_logo,
+    .mb_search {
+        width: 140px;
+    }
+
+    /* hmb search */
+    .mb_search {
+        .mb_search_icon {
+            &:hover {
+                color: $primary-color;
+            }
+        }
+    }
+
+    // menu
+    .st-menu1-in-head {
+        .st-menu-nav-item-in-head {
+            > .st-sub-menu-nav-in-head {
+                border-bottom: 3px solid #000;
+            }
+        }
+    }
+}

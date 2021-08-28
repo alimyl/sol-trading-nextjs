@@ -1,0 +1,16 @@
+// @import "components/reset";
+@import "components/fonts";
+@import "components/variables";
+@import "components/mixins";
+@import "components/common";
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.st-wrapper {
+    $wrapperBorderColor: #ececec;
+    border-top: 1px solid $wrapperBorderColor;
+}

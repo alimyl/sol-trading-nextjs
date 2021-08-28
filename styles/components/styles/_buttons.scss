@@ -1,0 +1,60 @@
+/* REMOVING DEFAULT BUTTON STYLE */
+button.no-browser-style {
+    background-color: transparent;
+    padding: initial;
+    line-height: normal;
+    outline: none;
+    border: none;
+}
+
+// BTN MAIN
+.st-btn {
+    display: inline-block;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #000;
+    padding: 10px 20px 11px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: normal;
+    outline: none;
+    cursor: pointer;
+    @include transition;
+
+    &:hover,
+    &.active {
+        background-color: #000;
+        color: #fff;
+    }
+    &:active {
+        background-color: #000;
+        color: #fff;
+    }
+
+    // min width
+    &:not(.no-min-width) {
+        min-width: 140px;
+    }
+
+    // btn primary
+    &.st-btn-primary {
+        background-color: $primary-color;
+        color: #fff;
+        border-color: $primary-color;
+        &:hover,
+        &.active {
+            background-color: darken($color: $primary-color, $amount: 3);
+        }
+
+        &:active {
+            background-color: darken($color: $primary-color, $amount: 5);
+        }
+    }
+
+    // btn disabled
+    &.disabled {
+        pointer-events: none !important;
+        opacity: 0.9;
+    }
+}

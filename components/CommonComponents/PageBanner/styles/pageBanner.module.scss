@@ -1,0 +1,17 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+/* PAGE BANNER CSS */
+#page-banner-wrapper {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+}
+.page-banner {
+    .content {
+        > p {
+            font-size: 18px;
+        }
+    }
+}

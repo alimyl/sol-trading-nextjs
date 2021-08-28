@@ -1,0 +1,125 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// PRODUCTS CSS
+
+// product listing
+#st-products-listing-wrapper {
+}
+.st-products-listing {
+    .spl_lt {
+        @include min_width($lg-min) {
+            width: 200px;
+        }
+        @include min_width($lg-min) {
+            width: 250px;
+        }
+
+        .card-header {
+        }
+    }
+
+    .spl_rt {
+        border-left: 1px solid $light-gray-color2;
+        .all-products {
+            margin: 0 -10px;
+            .st-product-item-in-prods {
+                padding: 0 10px;
+                margin-bottom: 25px;
+            }
+        }
+
+        .top-filters {
+            .tf_lt {
+                .item {
+                    .icon {
+                        @include transition;
+                        &:hover {
+                            color: $primary-color;
+                        }
+                    }
+                }
+            }
+
+            .sorting-btns {
+                .sorting-btn {
+                    padding: 5px 10px;
+                    color: $text__dark-color;
+                    &:hover,
+                    &.active {
+                        border-color: #000 !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// PRODUCT VIEW
+#st-product-view-wrapper {}
+.st-product-view {
+    .productViewSliderThumbs {
+        margin-top: 20px;
+    }
+    
+    .thumb-slide-item {
+        margin-bottom: 1px;
+        >.inner {
+            @include transition;
+            &:not(.slide-active):hover {
+                border-color: #888 !important;
+                opacity: 0.5;
+            }
+            &.slide-active {
+                border-color: $primary-color !important;
+                cursor: default !important;
+            }
+        }
+    }
+    @include min_width($md-min) {
+        .main-slide-item {
+            height: 300px;
+        }
+        .thumb-slide-item {
+            height: 50px;
+        }
+    }
+    @include min_width($lg-min) {
+        .main-slide-item {
+            height: 600px;
+        }
+        .thumb-slide-item {
+            height: 120px;
+        }
+    }
+    // .swiper-slide {
+    // }
+
+    .product-name {
+        font-size: 45px;
+    }
+
+    .product-availability {
+        .in-stock {
+            .icon {
+                color: $primary-color;
+            }
+        }
+    }
+
+    .product-details {
+        >.item {
+            .title {
+                color: #737373;
+            }
+        }
+    }
+
+    .product-price {
+        .price {
+            font-size: 40px;
+        }
+    }
+}
