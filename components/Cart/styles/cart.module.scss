@@ -1,0 +1,14 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// CART CSS
+.cart-table {
+    display: block;
+}
+
+.product-details {
+    .img-sec {
+        width: 80px;
+    }
+}

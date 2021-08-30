@@ -13,13 +13,12 @@ button.no-browser-style {
     background-color: #fff;
     color: #333;
     border: 1px solid #000;
-    padding: 10px 20px 11px;
-    font-size: 14px;
-    font-weight: 600;
+    padding: 14px 20px 11px;
     text-decoration: none;
     line-height: normal;
     outline: none;
     cursor: pointer;
+    line-height: normal;
     @include transition;
 
     &:hover,
@@ -49,6 +48,23 @@ button.no-browser-style {
 
         &:active {
             background-color: darken($color: $primary-color, $amount: 5);
+        }
+    }
+
+    // btn secondary
+    &.st-btn-secondary {
+        background-color: $secondary-color;
+        color: #fff;
+        border-color: $secondary-color;
+        &:hover,
+        &.active {
+            background-color: darken($color: $secondary-color, $amount: 3);
+            color: #fff;
+        }
+
+        &:active {
+            background-color: darken($color: $secondary-color, $amount: 5);
+            color: #fff;
         }
     }
 

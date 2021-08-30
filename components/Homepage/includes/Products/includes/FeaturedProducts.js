@@ -131,7 +131,7 @@ export default function FeaturedProducts() {
                             <div className="inner text-center">
                                 {/* image */}
                                 <Link href="/home">
-                                    <a className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2"
+                                    <a className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2 overflow-hidden"
                                         title={item.name}>
                                         {
                                             item.imgPath ? (

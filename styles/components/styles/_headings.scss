@@ -1,7 +1,5 @@
 /* HEADING STYLES */
 .st-heading-wrapper {
-    /* SIZES */
-
     .st-heading {
         font-size: 45px;
         .icon {
@@ -15,11 +13,19 @@
                 left: calc(50% - 20px);
                 height: 100%;
                 width: 40px;
-                background: url("../../../public/images/logo-leaf.png") no-repeat
-                    center / 40px;
+                background: url("../../../public/images/logo-leaf.png")
+                    no-repeat center / 40px;
                 -webkit-animation: spin 3s linear infinite;
                 animation: spin 3s linear infinite;
             }
+        }
+    }
+
+    // sizes
+    &.heading-sm {
+        .st-heading {
+            font-size: 30px;
+            font-weight: 600;
         }
     }
 }

@@ -1,9 +1,6 @@
 // Layout component
 import Layout from 'components/Layout'
 
-// global styles
-import '../styles/globals.scss'
-
 // bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,6 +9,9 @@ import "swiper/swiper.scss";
 import 'swiper/components/pagination/pagination.scss';
 import 'swiper/components/navigation/navigation.scss';
 import "swiper/components/thumbs/thumbs.min.css"
+
+// global styles
+import '../styles/globals.scss'
 
 // REACT REDUX
 import { Provider } from "react-redux";
