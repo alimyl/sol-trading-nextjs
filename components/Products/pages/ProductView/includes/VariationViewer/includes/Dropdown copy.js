@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 // styles
 import productViewStyles from "../../../../../styles/products.module.scss";
@@ -6,33 +6,9 @@ import productViewStyles from "../../../../../styles/products.module.scss";
 // bootstrap
 import { Form } from "react-bootstrap";
 
-export default function Rectangle(props) {
+export default function Dropdown(props) {
     // consts
     const { data } = props;
-
-    // states
-    const [selectedValue, setSelectedValue] = useState("default");
-
-    // setting default value
-    useEffect(() => {
-        if (data?.options?.length) {
-            data.options.forEach((element) => {
-                if (element.is_default) {
-                    setSelectedValue(element.value);
-                }
-            });
-        }
-    }, [data]);
-
-    // functions
-    // on radio value changes
-    const handleValueChange = (ev) => {
-        const inpVal = ev.target.value;
-
-        if (inpVal) {
-            setSelectedValue(inpVal);
-        }
-    };
 
     return (
         <React.Fragment>
@@ -44,9 +20,8 @@ export default function Rectangle(props) {
             <Form.Group className="st-form" style={{ width: 168 }}>
                 <Form.Control
                     as="select"
-                    value={selectedValue}
+                    defaultValue="default"
                     className="cursor-pointer no-select-icon text-center"
-                    onChange={handleValueChange}
                 >
                     <option value="default" disabled>
                         Select {data.variation_name}
