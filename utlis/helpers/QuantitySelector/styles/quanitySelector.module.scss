@@ -27,6 +27,8 @@ $defaultInputBorderColor: #cccccc;
     /* Firefox */
     .form-control-in-qs[type="number"] {
         -moz-appearance: textfield;
+        // user-select: none;
+        pointer-events: none;
     }
     > .inner > .form-control-in-qs {
         width: 90px;

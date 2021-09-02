@@ -16,6 +16,7 @@ import breadcrumbsStyles from './styles/breadcrumbs.module.scss'
 
 export default function BreadCrumbs(props) {
     const { currentRouteSingle } = props
+    
     return (
         <div id={breadcrumbsStyles["st-breadcrumbs-wrapper"]} className="">
             <Container>

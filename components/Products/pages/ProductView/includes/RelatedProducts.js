@@ -207,7 +207,7 @@ export default function RelatedProducts(props) {
                                                 </div>
                                                 <p className="price st-fs-17 st-fw-600 mt-2">{item.currencyType + item.price}</p>
                                                 <button
-                                                    className={`st-btn text-uppercase mt-2 ${(buttonLoadingId === item.id || allButtonsDisabled) && "disabled"}`}
+                                                    className={`st-btn st-fw-700 text-uppercase mt-2 ${(buttonLoadingId === item.id || allButtonsDisabled) && "disabled"}`}
                                                     onClick={(ev) => handleAddToCartButtonClick(ev, item.id)}>
                                                     {
                                                         (buttonLoadingId === item.id) ? (

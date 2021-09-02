@@ -23,7 +23,6 @@ import stLogo from "public/images/sol-trading-logo.gif";
 // APIs
 import {
     getCategoriesTree,
-    cancelGetCategoriesTreeApi,
 } from "utlis/Apis/Categories_API";
 
 // app messages
@@ -45,9 +44,8 @@ function HeaderMenu(props) {
         setCategoriesLoading(true);
 
         // getting categories tree
-        getCategoriesTree(props.currentUser?.userToken)
+        getCategoriesTree("34")
             .then((res) => {
-                console.log("res ", res);
                 // disabling categories list loading
                 setCategoriesLoading(false);
 
@@ -70,7 +68,7 @@ function HeaderMenu(props) {
                     err.message
                 );
             });
-    }, [props.currentUser?.userToken]);
+    }, []);
 
     useEffect(() => {
         getCategoriesList();
@@ -78,7 +76,7 @@ function HeaderMenu(props) {
 
     useEffect(() => {
         console.log("v ", props);
-        return () => {};
+        return () => { };
     }, [props]);
 
     return (
@@ -130,26 +128,30 @@ function HeaderMenu(props) {
                                         </a>
                                     </Link>
                                     {/* MENU */}
-                                    <ul
-                                        className={`${headerStyles["st-sub-menu-nav-in-head"]} st-sub-menu-nav list-unstyled position-absolute`}
-                                    >
-                                        {categories?.length
-                                            ? categories?.map((item, index) => {
-                                                  return (
-                                                      <React.Fragment
-                                                          key={item.category_id}
-                                                      >
-                                                          <HeaderMenuItem
-                                                              menuItem={item}
-                                                              menuItemIndex={
-                                                                  index
-                                                              }
-                                                          />
-                                                      </React.Fragment>
-                                                  );
-                                              })
-                                            : null}
-                                    </ul>
+                                    {categories?.length
+                                        ? (
+                                            <ul
+                                                className={`${headerStyles["st-sub-menu-nav-in-head"]} st-sub-menu-nav list-unstyled position-absolute`}
+                                            >
+                                                {
+                                                    categories?.map((item, index) => {
+                                                        return (
+                                                            <React.Fragment
+                                                                key={item.category_id}
+                                                            >
+                                                                <HeaderMenuItem
+                                                                    menuItem={item}
+                                                                    catName={item.category_url}
+                                                                    menuItemIndex={
+                                                                        index
+                                                                    }
+                                                                />
+                                                            </React.Fragment>
+                                                        );
+                                                    })
+                                                }
+                                            </ul>
+                                        ) : null}
                                 </li>
                                 <li
                                     className={`${headerStyles["st-menu-nav-item-in-head"]} st-menu-nav-item position-relative`}

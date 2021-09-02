@@ -11,7 +11,7 @@ import FeatherIcon from "feather-icons-react";
 
 export default function HeaderMenuItem(props) {
     // props
-    const { menuItem, menuItemIndex } = props;
+    const { menuItem, menuItemIndex, catName } = props;
 
     // variables
     let multiLevelCategories = null;
@@ -25,15 +25,16 @@ export default function HeaderMenuItem(props) {
             >
                 {menuItem?.sub_categories?.length
                     ? menuItem?.sub_categories.map((item, index) => {
-                          return (
-                              <React.Fragment key={item.category_id}>
-                                  <HeaderMenuItem
-                                      menuItem={item}
-                                      menuItemIndex={index}
-                                  />
-                              </React.Fragment>
-                          );
-                      })
+                        return (
+                            <React.Fragment key={item.category_id}>
+                                <HeaderMenuItem
+                                    menuItem={item}
+                                    catName={catName}
+                                    menuItemIndex={index}
+                                />
+                            </React.Fragment>
+                        );
+                    })
                     : null}
             </ul>
         );
@@ -44,7 +45,7 @@ export default function HeaderMenuItem(props) {
             data-index={menuItemIndex}
             className="st-sub-menu-nav-item position-relative"
         >
-            <Link href={`/products/` + menuItem.category_url}>
+            <Link href={`/products/${(menuItem.parent_id !== 0) ? catName + "/" : ""}${menuItem.category_url}?id=${menuItem.category_id}`}>
                 <a className="st-sub-menu-nav-link d-block text-decoration-none text-uppercase d-flex align-items-center">
                     <span className="media-body">{menuItem.category_name}</span>
                     {menuItem?.sub_categories?.length ? (

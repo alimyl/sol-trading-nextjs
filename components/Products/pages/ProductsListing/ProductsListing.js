@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 // nextjs - link
 import Link from "next/link";
@@ -16,16 +16,11 @@ import FeatherIcon from "feather-icons-react";
 // products styles
 import productsStyles from "../../styles/products.module.scss";
 
-// images
-import productImg1 from "public/images/products/img1.jpg";
-import productImg2 from "public/images/products/img2.jpg";
-import productImg3 from "public/images/products/img3.jpg";
-import productImg4 from "public/images/products/img4.jpg";
-import productImg5 from "public/images/products/img5.jpg";
-import productImg6 from "public/images/products/img6.jpg";
-import productImg7 from "public/images/products/img7.jpg";
-import productImg8 from "public/images/products/img8.jpg";
-import productImg9 from "public/images/products/img9.jpg";
+// react toastify
+import { toast } from 'react-toastify';
+
+// APIs
+import { getProducts } from 'utlis/Apis/Products_API'
 
 // no image
 import noImgFoundImg from "public/images/no_image_big.jpg";
@@ -33,118 +28,98 @@ import noImgFoundImg from "public/images/no_image_big.jpg";
 // breadcrumbs
 import BreadCrumbs from "components/CommonComponents/BreadCrumbs";
 
+// app messages
+import {
+    ERROR_WHILE__NAME,
+    UNKNOWN_ERROR_OCCURED,
+    ERROR_WHILE_FETCHING_PRODUCTS,
+} from 'utlis/AppMessages/AppMessages'
+
 export default function ProductsListing(props) {
     // consts
     const router = useRouter();
+    const { categoryId, subCategoryId, id } = router.query;
 
     // states
     const [currentRoute, setCurrentRoute] = useState({}); // { routeName: 'name of the route', routeUrl: 'url of the route' }
     const [currentRouteArray, setCurrentRouteArray] = useState([]); // [{ routeName: 'name of the route', routeUrl: 'url of the route' }]
 
-    const [featuredProducts, setFeaturedProducts] = useState([
-        {
-            id: "1",
-            imgPath: productImg1,
-            name: "Hk 393",
-            sku: "hk-393",
-            currencyType: "$",
-            price: "33.00",
-        },
-        {
-            id: "2",
-            imgPath: productImg2,
-            name: "Truweigh Enigma Scale - 500g X 0.01g",
-            sku: "truweigh-enigma-scale-500g-x-0.01g",
-            currencyType: "$",
-            price: "35.00",
-        },
-        {
-            id: "3",
-            imgPath: productImg3,
-            name: "Blink Glass Tray",
-            sku: "blink-glass-tray",
-            currencyType: "$",
-            price: "3.50",
-        },
-        {
-            id: "4",
-            imgPath: productImg4,
-            name: "Ooze Saturn Grinder",
-            sku: "ooze-saturn-grinder",
-            currencyType: "$",
-            price: "14.00",
-        },
-        {
-            id: "5",
-            imgPath: productImg5,
-            name: "Cl 1021",
-            sku: "cl-1021",
-            currencyType: "$",
-            price: "12.00",
-        },
-        {
-            id: "6",
-            imgPath: productImg6,
-            name: "Ooze Cranium Silicone Wp & Nectar Collector",
-            sku: "ooze-cranium-silicone-wp-&-nectar-collector",
-            currencyType: "$",
-            price: "35.00",
-        },
-        {
-            id: "7",
-            imgPath: productImg7,
-            name: "Krave Glass Cleaner 16oz",
-            sku: "krave-glass-cleaner-16oz",
-            currencyType: "$",
-            price: "38.00",
-        },
-        {
-            id: "8",
-            imgPath: productImg8,
-            name: "Stratus Temperature Reader",
-            sku: "stratus-temperature-reader",
-            currencyType: "$",
-            price: "33.00",
-        },
-        {
-            id: "9",
-            imgPath: productImg9,
-            name: "Stratus Duo Digital E-nail",
-            sku: "stratus-duo-digital-e-nail",
-            currencyType: "$",
-            price: "16.50",
-        },
-    ]);
+    const [allProducts, setAllProducts] = useState([]);
+    const [allProductsLoading, setAllProductsLoading] = useState(false);
 
     const [buttonLoadingId, setButtonLoadingId] = useState("");
     const [allButtonsDisabled, setAllButtonsDisabled] = useState(false);
 
     const [currentSortingOrder, setCurrentSortingOrder] = useState(false);
-    const [currentCategory, setCurrentCategory] = useState({});
+
+    // function to get categories
+    const getProductsByCategory = useCallback(() => {
+        const URLParams = "category_id=" + id + "&limit=20"
+        // enabling loading
+        setAllProductsLoading(true)
+
+        // getting data
+        getProducts("12", URLParams).then(res => {
+            const resData = res.data
+            console.log("resData ", resData)
+
+            // disabling loading
+            setAllProductsLoading(false)
+
+            // scroll the page to the top
+            window.scrollTo(0, 0)
+
+            // if request succesfull
+            if (resData && resData.success) {
+                setAllProducts(resData.data)
+            }
+
+            // if request is not succesfull
+            if (resData && resData.error) {
+                // dismissing all the previous toasts first
+                toast.dismiss();
+
+                // showing the error message
+                toast.error(ERROR_WHILE_FETCHING_PRODUCTS, {
+                    autoClose: 3000,
+                    onClose: () => {
+
+                    }
+                })
+            }
+        }).catch(err => {
+            console.log(`${ERROR_WHILE__NAME} getProducts `, err.message)
+
+            // dismissing all the previous toasts first
+            toast.dismiss();
+
+            // showing the error message
+            toast.error(UNKNOWN_ERROR_OCCURED, {
+                autoClose: 2500,
+                onClose: () => {
+                    // disabling loading
+                    setAllProductsLoading(false)
+                }
+            })
+        })
+    }, [id])
+
+    // getting products
+    useEffect(() => {
+        getProductsByCategory()
+    }, [getProductsByCategory])
 
     // breadcrumbs generating
     useEffect(() => {
-        const { categoryId } = router.query;
-        const { subCategoryId } = router.query;
-
-        // console.log("categoryId from the products listing ", categoryId)
-        // console.log("subCategoryId from the products listing ", subCategoryId)
-
         // if there's only single level category
         if (categoryId) {
             // setting current route
             setCurrentRoute({
                 routeName: categoryId,
                 sku: categoryId,
-                routeUrl: "/products/" + categoryId,
+                routeUrl: "/products/" + categoryId + "?id=" + id,
             });
 
-            // setting current category
-            setCurrentCategory({
-                routeName: categoryId,
-                sku: categoryId,
-                routeUrl: "/products/" + categoryId,
-            });
             // emptying all routes array
             setCurrentRouteArray([]);
         }
@@ -156,24 +131,20 @@ export default function ProductsListing(props) {
                 {
                     routeName: categoryId,
                     sku: categoryId,
-                    routeUrl: "/products/" + categoryId,
+                    routeUrl: "/products/" + categoryId + "?id=" + id,
                 },
                 {
                     routeName: subCategoryId,
                     sku: subCategoryId,
-                    routeUrl: "/products/" + categoryId + "/" + subCategoryId,
+                    routeUrl: "/products/" + categoryId + "/" + subCategoryId + "?id=" + id,
                 },
             ]);
-            // setting current category
-            setCurrentCategory({
-                routeName: categoryId,
-                sku: categoryId,
-                routeUrl: "/products/" + categoryId,
-            });
+
             // emptying current route
             setCurrentRoute({});
         }
-    }, [router]);
+
+    }, [categoryId, subCategoryId, id]);
 
     // add to cart button hadling
     const handleAddToCartButtonClick = (ev, id) => {
@@ -561,16 +532,13 @@ export default function ProductsListing(props) {
                                             >
                                                 {/* btn */}
                                                 <a
-                                                    href="/"
-                                                    className={`${
-                                                        productsStyles[
-                                                            "sorting-btn"
-                                                        ]
-                                                    } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center ${
-                                                        currentSortingOrder ===
-                                                            "asc" &&
+                                                    className={`${productsStyles[
+                                                        "sorting-btn"
+                                                    ]
+                                                        } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center cursor-pointer ${currentSortingOrder ===
+                                                        "asc" &&
                                                         productsStyles["active"]
-                                                    }`}
+                                                        }`}
                                                     onClick={(ev) =>
                                                         manageSortingOrder(
                                                             ev,
@@ -590,15 +558,13 @@ export default function ProductsListing(props) {
 
                                                 {/* btn */}
                                                 <a
-                                                    className={`${
-                                                        productsStyles[
-                                                            "sorting-btn"
-                                                        ]
-                                                    } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center ${
-                                                        currentSortingOrder ===
-                                                            "desc" &&
+                                                    className={`${productsStyles[
+                                                        "sorting-btn"
+                                                    ]
+                                                        } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center ${currentSortingOrder ===
+                                                        "desc" &&
                                                         productsStyles["active"]
-                                                    }`}
+                                                        }`}
                                                     onClick={(ev) =>
                                                         manageSortingOrder(
                                                             ev,
@@ -624,109 +590,114 @@ export default function ProductsListing(props) {
                                 <div
                                     className={`${productsStyles["all-products"]} d-flex flex-wrap`}
                                 >
-                                    {featuredProducts &&
-                                        featuredProducts.map((item) => (
-                                            <Col
-                                                key={item.id}
-                                                xs={12}
-                                                sm={6}
-                                                md={4}
-                                                lg={3}
-                                                className={`${productsStyles["st-product-item-in-prods"]} st-product-item`}
-                                            >
-                                                <div className="inner text-center">
-                                                    {/* image */}
-                                                    <Link
-                                                        href={{
-                                                            pathname:
-                                                                "/product-details/" +
-                                                                item.sku,
-                                                            // query: { currentCategory }
-                                                        }}
-                                                    >
-                                                        <a
-                                                            className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2 overflow-hidden"
-                                                            title={item.name}
+                                    {
+                                        // loading
+                                        allProductsLoading && (
+                                            <React.Fragment>
+                                                <Col xs={12} className="text-center">
+                                                    <Spinner animation="border" />
+                                                </Col>
+                                            </React.Fragment>
+                                        )
+                                    }
+
+                                    {
+                                        // all products
+                                        allProducts?.length ? (
+                                            allProducts?.map((item) => (
+                                                <Col key={item.product_id} xs={12} sm={6} md={4} lg={3}
+                                                    className={`${productsStyles["st-product-item-in-prods"]} st-product-item`}>
+                                                    <div className="inner text-center">
+                                                        {/* image */}
+                                                        <Link
+                                                            href={{
+                                                                pathname: `/product-details/${item.product_url}`,
+                                                                query: { id: item.product_id }
+                                                            }}
                                                         >
-                                                            {item.imgPath ? (
-                                                                <Image
-                                                                    alt=""
-                                                                    src={
-                                                                        item.imgPath
-                                                                    }
-                                                                    placeholder="blur"
-                                                                    layout="intrinsic"
-                                                                />
-                                                            ) : (
-                                                                <Image
-                                                                    alt=""
-                                                                    src={
-                                                                        noImgFoundImg
-                                                                    }
-                                                                    placeholder="blur"
-                                                                    layout="intrinsic"
-                                                                />
-                                                            )}
-                                                        </a>
-                                                    </Link>
-                                                    {/* details */}
-                                                    <div className="product-details mt-2">
-                                                        <div className="name">
-                                                            <Link
-                                                                href={{
-                                                                    pathname:
-                                                                        "/product-details/" +
-                                                                        item.sku,
-                                                                }}
+                                                            <a
+                                                                className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2 overflow-hidden"
+                                                                title={item.product_name}
                                                             >
-                                                                <a
-                                                                    className="text-decoration-none st-text-light st-fw-600"
-                                                                    title={
-                                                                        item.name
-                                                                    }
-                                                                >
-                                                                    {item.name}
-                                                                </a>
-                                                            </Link>
-                                                        </div>
-                                                        <p className="price st-fs-17 st-fw-600 mt-2">
-                                                            {item.currencyType +
-                                                                item.price}
-                                                        </p>
-                                                        <button
-                                                            className={`st-btn text-uppercase mt-2 ${
-                                                                (buttonLoadingId ===
-                                                                    item.id ||
-                                                                    allButtonsDisabled) &&
-                                                                "disabled"
-                                                            }`}
-                                                            onClick={(ev) =>
-                                                                handleAddToCartButtonClick(
-                                                                    ev,
-                                                                    item.id
-                                                                )
-                                                            }
-                                                        >
-                                                            {buttonLoadingId ===
-                                                            item.id ? (
-                                                                <Spinner
-                                                                    animation="border"
-                                                                    size="sm"
-                                                                    className="position-relative"
-                                                                    style={{
-                                                                        top: 1,
+                                                                {item.imgPath ? (
+                                                                    <Image
+                                                                        alt=""
+                                                                        src={
+                                                                            item.imgPath
+                                                                        }
+                                                                        placeholder="blur"
+                                                                        layout="intrinsic"
+                                                                    />
+                                                                ) : (
+                                                                    <Image
+                                                                        alt=""
+                                                                        src={
+                                                                            noImgFoundImg
+                                                                        }
+                                                                        placeholder="blur"
+                                                                        layout="intrinsic"
+                                                                    />
+                                                                )}
+                                                            </a>
+                                                        </Link>
+                                                        {/* details */}
+                                                        <div className="product-details mt-2">
+                                                            <div className="name">
+                                                                <Link
+                                                                    href={{
+                                                                        pathname: `/product-details/${item.product_url}`,
+                                                                        query: { id: item.product_id }
                                                                     }}
-                                                                />
-                                                            ) : (
-                                                                <span>
-                                                                    add to cart
-                                                                </span>
-                                                            )}
-                                                        </button>
+                                                                >
+                                                                    <a
+                                                                        className="text-decoration-none st-text-light st-fw-600"
+                                                                        title={
+                                                                            item.product_name
+                                                                        }
+                                                                    >
+                                                                        {item.product_name}
+                                                                    </a>
+                                                                </Link>
+                                                            </div>
+                                                            <p className="price st-fs-17 st-fw-600 mt-2">
+                                                                ${item.price}
+                                                            </p>
+                                                            <button
+                                                                className={`st-btn st-fw-700 text-uppercase mt-2 
+                                                                ${(buttonLoadingId === item.product_id || allButtonsDisabled) && "disabled"}`}
+                                                                onClick={(ev) =>
+                                                                    handleAddToCartButtonClick(
+                                                                        ev,
+                                                                        item.product_id
+                                                                    )
+                                                                }>
+                                                                {buttonLoadingId === item.product_id ? (
+                                                                    <Spinner
+                                                                        animation="border"
+                                                                        size="sm"
+                                                                        className="position-relative"
+                                                                        style={{
+                                                                            top: 1,
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    <span>
+                                                                        add to cart
+                                                                    </span>
+                                                                )}
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Col>
-                                        ))}
+                                                </Col>
+                                            ))
+                                        ) : (
+                                            !allProductsLoading && (
+                                                <Col xs={12}>
+                                                    <p className="text-center">No products found</p>
+                                                </Col>
+                                            )
+                                        )
+                                    }
                                 </div>
                             </div>
                         </div>

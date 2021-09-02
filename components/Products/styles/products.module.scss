@@ -107,11 +107,27 @@
                 color: $primary-color;
             }
         }
+        .out-stock {
+            .icon {
+                color: $colorDanger;
+            }
+        }
     }
 
     .product-details {
         >.item {
             .title {
+                color: #737373;
+            }
+        }
+        
+        >.description {
+            p {
+                margin-bottom: 5px;
+            }
+        }
+        .dimentions-item {
+            .st-fw-700 {
                 color: #737373;
             }
         }

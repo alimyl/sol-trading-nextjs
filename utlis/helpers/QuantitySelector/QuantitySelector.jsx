@@ -41,6 +41,11 @@ export default function QuantitySelector(props) {
         }
     }
 
+    // input changing
+    const handleChange = (ev) => {
+        ev.preventDefault()
+    }
+
     return (
         <div className={quanitySelectorStyles["st-quantity-selector"]}>
             <div className={`${quanitySelectorStyles["inner"]} st-form no-shadow d-inline-flex`}>
@@ -58,8 +63,8 @@ export default function QuantitySelector(props) {
                 <input
                     type="number"
                     className={`${quanitySelectorStyles["form-control-in-qs"]} form-control rounded-0 text-center`}
-                    value={inputVal}
-                    // onChange={(ev) => console.log('')}
+                    defaultValue={inputVal}
+                    onChange={handleChange}
                 />
 
                 <button
