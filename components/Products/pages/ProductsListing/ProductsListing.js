@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 
+// redux
+import { connect } from "react-redux";
+
 // nextjs - link
 import Link from "next/link";
 // nextjs - image
@@ -17,10 +20,10 @@ import FeatherIcon from "feather-icons-react";
 import productsStyles from "../../styles/products.module.scss";
 
 // react toastify
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 // APIs
-import { getProducts } from 'utlis/Apis/Products_API'
+import { getProducts } from "utlis/Apis/Products_API";
 
 // no image
 import noImgFoundImg from "public/images/no_image_big.jpg";
@@ -28,14 +31,17 @@ import noImgFoundImg from "public/images/no_image_big.jpg";
 // breadcrumbs
 import BreadCrumbs from "components/CommonComponents/BreadCrumbs";
 
+// actions
+import { setCartItem } from "redux/actions/actionCart";
+
 // app messages
 import {
     ERROR_WHILE__NAME,
     UNKNOWN_ERROR_OCCURED,
     ERROR_WHILE_FETCHING_PRODUCTS,
-} from 'utlis/AppMessages/AppMessages'
+} from "utlis/AppMessages/AppMessages";
 
-export default function ProductsListing(props) {
+function ProductsListing(props) {
     // consts
     const router = useRouter();
     const { categoryId, subCategoryId, id } = router.query;
@@ -54,60 +60,60 @@ export default function ProductsListing(props) {
 
     // function to get categories
     const getProductsByCategory = useCallback(() => {
-        const URLParams = "category_id=" + id + "&limit=20"
+        const URLParams = "category_id=" + id + "&limit=20";
         // enabling loading
-        setAllProductsLoading(true)
+        setAllProductsLoading(true);
 
         // getting data
-        getProducts("12", URLParams).then(res => {
-            const resData = res.data
-            console.log("resData ", resData)
+        getProducts("12", URLParams)
+            .then((res) => {
+                const resData = res.data;
+                console.log("resData ", resData);
 
-            // disabling loading
-            setAllProductsLoading(false)
+                // disabling loading
+                setAllProductsLoading(false);
 
-            // scroll the page to the top
-            window.scrollTo(0, 0)
+                // scroll the page to the top
+                window.scrollTo(0, 0);
 
-            // if request succesfull
-            if (resData && resData.success) {
-                setAllProducts(resData.data)
-            }
+                // if request succesfull
+                if (resData && resData.success) {
+                    setAllProducts(resData.data);
+                }
 
-            // if request is not succesfull
-            if (resData && resData.error) {
+                // if request is not succesfull
+                if (resData && resData.error) {
+                    // dismissing all the previous toasts first
+                    toast.dismiss();
+
+                    // showing the error message
+                    toast.error(ERROR_WHILE_FETCHING_PRODUCTS, {
+                        autoClose: 3000,
+                        onClose: () => {},
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(`${ERROR_WHILE__NAME} getProducts `, err.message);
+
                 // dismissing all the previous toasts first
                 toast.dismiss();
 
                 // showing the error message
-                toast.error(ERROR_WHILE_FETCHING_PRODUCTS, {
-                    autoClose: 3000,
+                toast.error(UNKNOWN_ERROR_OCCURED, {
+                    autoClose: 2500,
                     onClose: () => {
-
-                    }
-                })
-            }
-        }).catch(err => {
-            console.log(`${ERROR_WHILE__NAME} getProducts `, err.message)
-
-            // dismissing all the previous toasts first
-            toast.dismiss();
-
-            // showing the error message
-            toast.error(UNKNOWN_ERROR_OCCURED, {
-                autoClose: 2500,
-                onClose: () => {
-                    // disabling loading
-                    setAllProductsLoading(false)
-                }
-            })
-        })
-    }, [id])
+                        // disabling loading
+                        setAllProductsLoading(false);
+                    },
+                });
+            });
+    }, [id]);
 
     // getting products
     useEffect(() => {
-        getProductsByCategory()
-    }, [getProductsByCategory])
+        getProductsByCategory();
+    }, [getProductsByCategory]);
 
     // breadcrumbs generating
     useEffect(() => {
@@ -136,25 +142,35 @@ export default function ProductsListing(props) {
                 {
                     routeName: subCategoryId,
                     sku: subCategoryId,
-                    routeUrl: "/products/" + categoryId + "/" + subCategoryId + "?id=" + id,
+                    routeUrl:
+                        "/products/" +
+                        categoryId +
+                        "/" +
+                        subCategoryId +
+                        "?id=" +
+                        id,
                 },
             ]);
 
             // emptying current route
             setCurrentRoute({});
         }
-
     }, [categoryId, subCategoryId, id]);
 
     // add to cart button hadling
-    const handleAddToCartButtonClick = (ev, id) => {
+    const handleAddToCartButtonClick = (ev, item) => {
+        console.log("item ", item);
         ev.preventDefault();
         // setting id of the current loading button
-        setButtonLoadingId(id);
+        setButtonLoadingId(item.product_id);
         setAllButtonsDisabled(true);
+
+        // saving user to the global cart
+        props.setCartItem(item);
 
         // resetting id of the current loading button
         setTimeout(() => {
+            console.log("props ", props);
             setButtonLoadingId("");
             setAllButtonsDisabled(false);
         }, 2000);
@@ -532,13 +548,15 @@ export default function ProductsListing(props) {
                                             >
                                                 {/* btn */}
                                                 <a
-                                                    className={`${productsStyles[
-                                                        "sorting-btn"
-                                                    ]
-                                                        } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center cursor-pointer ${currentSortingOrder ===
-                                                        "asc" &&
+                                                    className={`${
+                                                        productsStyles[
+                                                            "sorting-btn"
+                                                        ]
+                                                    } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center cursor-pointer ${
+                                                        currentSortingOrder ===
+                                                            "asc" &&
                                                         productsStyles["active"]
-                                                        }`}
+                                                    }`}
                                                     onClick={(ev) =>
                                                         manageSortingOrder(
                                                             ev,
@@ -558,13 +576,15 @@ export default function ProductsListing(props) {
 
                                                 {/* btn */}
                                                 <a
-                                                    className={`${productsStyles[
-                                                        "sorting-btn"
-                                                    ]
-                                                        } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center ${currentSortingOrder ===
-                                                        "desc" &&
+                                                    className={`${
+                                                        productsStyles[
+                                                            "sorting-btn"
+                                                        ]
+                                                    } st-fs-16 st-fw-600 text-decoration-none border d-flex align-items-center justify-content-center ${
+                                                        currentSortingOrder ===
+                                                            "desc" &&
                                                         productsStyles["active"]
-                                                        }`}
+                                                    }`}
                                                     onClick={(ev) =>
                                                         manageSortingOrder(
                                                             ev,
@@ -594,7 +614,10 @@ export default function ProductsListing(props) {
                                         // loading
                                         allProductsLoading && (
                                             <React.Fragment>
-                                                <Col xs={12} className="text-center">
+                                                <Col
+                                                    xs={12}
+                                                    className="text-center"
+                                                >
                                                     <Spinner animation="border" />
                                                 </Col>
                                             </React.Fragment>
@@ -603,100 +626,148 @@ export default function ProductsListing(props) {
 
                                     {
                                         // all products
-                                        allProducts?.length ? (
-                                            allProducts?.map((item) => (
-                                                <Col key={item.product_id} xs={12} sm={6} md={4} lg={3}
-                                                    className={`${productsStyles["st-product-item-in-prods"]} st-product-item`}>
-                                                    <div className="inner text-center">
-                                                        {/* image */}
-                                                        <Link
-                                                            href={{
-                                                                pathname: `/product-details/${item.product_url}`,
-                                                                query: { id: item.product_id }
-                                                            }}
-                                                        >
-                                                            <a
-                                                                className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2 overflow-hidden"
-                                                                title={item.product_name}
-                                                            >
-                                                                {item.imgPath ? (
-                                                                    <Image
-                                                                        alt=""
-                                                                        src={
-                                                                            item.imgPath
-                                                                        }
-                                                                        placeholder="blur"
-                                                                        layout="intrinsic"
-                                                                    />
-                                                                ) : (
-                                                                    <Image
-                                                                        alt=""
-                                                                        src={
-                                                                            noImgFoundImg
-                                                                        }
-                                                                        placeholder="blur"
-                                                                        layout="intrinsic"
-                                                                    />
-                                                                )}
-                                                            </a>
-                                                        </Link>
-                                                        {/* details */}
-                                                        <div className="product-details mt-2">
-                                                            <div className="name">
-                                                                <Link
-                                                                    href={{
-                                                                        pathname: `/product-details/${item.product_url}`,
-                                                                        query: { id: item.product_id }
-                                                                    }}
-                                                                >
-                                                                    <a
-                                                                        className="text-decoration-none st-text-light st-fw-600"
-                                                                        title={
-                                                                            item.product_name
-                                                                        }
-                                                                    >
-                                                                        {item.product_name}
-                                                                    </a>
-                                                                </Link>
-                                                            </div>
-                                                            <p className="price st-fs-17 st-fw-600 mt-2">
-                                                                ${item.price}
-                                                            </p>
-                                                            <button
-                                                                className={`st-btn st-fw-700 text-uppercase mt-2 
-                                                                ${(buttonLoadingId === item.product_id || allButtonsDisabled) && "disabled"}`}
-                                                                onClick={(ev) =>
-                                                                    handleAddToCartButtonClick(
-                                                                        ev,
-                                                                        item.product_id
-                                                                    )
-                                                                }>
-                                                                {buttonLoadingId === item.product_id ? (
-                                                                    <Spinner
-                                                                        animation="border"
-                                                                        size="sm"
-                                                                        className="position-relative"
-                                                                        style={{
-                                                                            top: 1,
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <span>
-                                                                        add to cart
-                                                                    </span>
-                                                                )}
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </Col>
-                                            ))
-                                        ) : (
-                                            !allProductsLoading && (
-                                                <Col xs={12}>
-                                                    <p className="text-center">No products found</p>
-                                                </Col>
-                                            )
-                                        )
+                                        allProducts?.length
+                                            ? allProducts?.map((item) => (
+                                                  <Col
+                                                      key={item.product_id}
+                                                      xs={12}
+                                                      sm={6}
+                                                      md={4}
+                                                      lg={3}
+                                                      className={`${productsStyles["st-product-item-in-prods"]} st-product-item`}
+                                                  >
+                                                      <div className="inner text-center">
+                                                          {/* image */}
+                                                          <Link
+                                                              href={{
+                                                                  pathname: `/product-details/${item.product_url}`,
+                                                                  query: {
+                                                                      id: item.product_id,
+                                                                  },
+                                                              }}
+                                                          >
+                                                              <a
+                                                                  className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2 overflow-hidden"
+                                                                  title={
+                                                                      item.product_name
+                                                                  }
+                                                              >
+                                                                  {item.imgPath ? (
+                                                                      <Image
+                                                                          alt=""
+                                                                          src={
+                                                                              item.imgPath
+                                                                          }
+                                                                          placeholder="blur"
+                                                                          layout="intrinsic"
+                                                                      />
+                                                                  ) : (
+                                                                      <Image
+                                                                          alt=""
+                                                                          src={
+                                                                              noImgFoundImg
+                                                                          }
+                                                                          placeholder="blur"
+                                                                          layout="intrinsic"
+                                                                      />
+                                                                  )}
+                                                              </a>
+                                                          </Link>
+                                                          {/* details */}
+                                                          <div className="product-details mt-2">
+                                                              <div className="name">
+                                                                  <Link
+                                                                      href={{
+                                                                          pathname: `/product-details/${item.product_url}`,
+                                                                          query: {
+                                                                              id: item.product_id,
+                                                                          },
+                                                                      }}
+                                                                  >
+                                                                      <a
+                                                                          className="text-decoration-none st-text-light st-fw-600"
+                                                                          title={
+                                                                              item.product_name
+                                                                          }
+                                                                      >
+                                                                          {
+                                                                              item.product_name
+                                                                          }
+                                                                      </a>
+                                                                  </Link>
+                                                              </div>
+                                                              <p className="price st-fs-17 st-fw-600 mt-2">
+                                                                  ${item.price}
+                                                              </p>
+                                                              {item
+                                                                  ?.combinations
+                                                                  ?.length ? (
+                                                                  <Link
+                                                                      href={{
+                                                                          pathname: `/product-details/${item.product_url}`,
+                                                                          query: {
+                                                                              id: item.product_id,
+                                                                          },
+                                                                      }}
+                                                                  >
+                                                                      <a
+                                                                          className={`st-btn st-fw-700 text-uppercase mt-2`}
+                                                                      >
+                                                                          <span>
+                                                                              add
+                                                                              to
+                                                                              cart
+                                                                          </span>
+                                                                      </a>
+                                                                  </Link>
+                                                              ) : (
+                                                                  <button
+                                                                      className={`st-btn st-fw-700 text-uppercase mt-2 
+                                                                  ${
+                                                                      (buttonLoadingId ===
+                                                                          item.product_id ||
+                                                                          allButtonsDisabled) &&
+                                                                      "disabled"
+                                                                  }`}
+                                                                      onClick={(
+                                                                          ev
+                                                                      ) =>
+                                                                          handleAddToCartButtonClick(
+                                                                              ev,
+                                                                              item
+                                                                          )
+                                                                      }
+                                                                  >
+                                                                      {buttonLoadingId ===
+                                                                      item.product_id ? (
+                                                                          <Spinner
+                                                                              animation="border"
+                                                                              size="sm"
+                                                                              className="position-relative"
+                                                                              style={{
+                                                                                  top: 1,
+                                                                              }}
+                                                                          />
+                                                                      ) : (
+                                                                          <span>
+                                                                              add
+                                                                              to
+                                                                              cart
+                                                                          </span>
+                                                                      )}
+                                                                  </button>
+                                                              )}
+                                                          </div>
+                                                      </div>
+                                                  </Col>
+                                              ))
+                                            : !allProductsLoading && (
+                                                  <Col xs={12}>
+                                                      <p className="text-center">
+                                                          No products found
+                                                      </p>
+                                                  </Col>
+                                              )
                                     }
                                 </div>
                             </div>
@@ -707,3 +778,20 @@ export default function ProductsListing(props) {
         </div>
     );
 }
+
+const getDataFromStore = (state) => {
+    return {
+        cart: state.cart,
+    };
+};
+
+const dispatchActionsToProps = (dispatch) => {
+    return {
+        setCartItem: (bool) => dispatch(setCartItem(bool)),
+    };
+};
+
+export default connect(
+    getDataFromStore,
+    dispatchActionsToProps
+)(ProductsListing);

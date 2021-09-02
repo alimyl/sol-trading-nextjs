@@ -15,3 +15,7 @@ export const EMPTY_AUTH = 'EMPTY_AUTH'
 // CATALOG - 
 // categories
 export const ADD_CATAGORIES = 'ADD_CATAGORIES'
+
+// CART
+export const SET_CART_DATA = 'SET_CART_DATA'
+export const EMPTY_CART = 'EMPTY_CART'
