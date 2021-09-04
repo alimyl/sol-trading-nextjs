@@ -11,7 +11,6 @@ import Dropdown from "./includes/Dropdown";
 export default function VariationViewer(props) {
     // consts
     const { variantMainFields } = props;
-    console.log("variantMainFields ", variantMainFields);
     return (
         <React.Fragment>
             {variantMainFields?.length

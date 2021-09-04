@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // redux
 import { connect } from "react-redux";
@@ -18,20 +18,18 @@ import HeaderCart from "./HeaderCart";
 // main component function
 function HeaderTopBar(props) {
     // consts
-    const { cart } = props;
+    const { cartItems, cartDetails } = props;
 
     // state variables
     const [cartDropdownVisibility, setcartDropdownVisibility] = useState(false);
 
     // show cart
     const showCartDropdown = () => {
-        console.log("cart shown");
         setcartDropdownVisibility(true);
     };
 
     // hide cart
     const hideCartDropdown = () => {
-        console.log("cart hidden");
         setcartDropdownVisibility(false);
     };
 
@@ -117,7 +115,7 @@ function HeaderTopBar(props) {
                                         className="position-relative me-2"
                                         style={{ top: 1 }}
                                     />
-                                    <span>{`(${cart.length || 0})`}</span>
+                                    <span>{`(${cartDetails?.cart_qty ?? 0})`}</span>
                                 </a>
 
                                 {/* cart dropdown */}
@@ -133,7 +131,8 @@ function HeaderTopBar(props) {
 
 const getDataFromStore = (state) => {
     return {
-        cart: state.cart.cartItem,
+        cartItems: state.cart.cartItems,
+        cartDetails: state.cart.cartDetails,
     };
 };
 

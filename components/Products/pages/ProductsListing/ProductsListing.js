@@ -22,8 +22,11 @@ import productsStyles from "../../styles/products.module.scss";
 // react toastify
 import { toast } from "react-toastify";
 
-// APIs
+// APIs products
 import { getProducts } from "utlis/Apis/Products_API";
+
+// cart
+import { saveToCart } from "utlis/Apis/Cart_API";
 
 // no image
 import noImgFoundImg from "public/images/no_image_big.jpg";
@@ -32,19 +35,22 @@ import noImgFoundImg from "public/images/no_image_big.jpg";
 import BreadCrumbs from "components/CommonComponents/BreadCrumbs";
 
 // actions
-import { setCartItem } from "redux/actions/actionCart";
+import { setCartDetails, setCartItem } from "redux/actions/actionCart";
 
 // app messages
 import {
     ERROR_WHILE__NAME,
     UNKNOWN_ERROR_OCCURED,
     ERROR_WHILE_FETCHING_PRODUCTS,
+    ADDED_TO_CART_SUCCESSFULLY,
+    ERROR_WHILE_SAVING_PRODUCT_TO_CART,
 } from "utlis/AppMessages/AppMessages";
 
 function ProductsListing(props) {
     // consts
     const router = useRouter();
     const { categoryId, subCategoryId, id } = router.query;
+    const { commonToken, currentUser, setCartItem, setCartDetails } = props;
 
     // states
     const [currentRoute, setCurrentRoute] = useState({}); // { routeName: 'name of the route', routeUrl: 'url of the route' }
@@ -60,55 +66,60 @@ function ProductsListing(props) {
 
     // function to get categories
     const getProductsByCategory = useCallback(() => {
-        const URLParams = "category_id=" + id + "&limit=20";
-        // enabling loading
-        setAllProductsLoading(true);
+        if (commonToken) {
+            const URLParams = "category_id=" + id + "&limit=20";
+            // enabling loading
+            setAllProductsLoading(true);
 
-        // getting data
-        getProducts("12", URLParams)
-            .then((res) => {
-                const resData = res.data;
-                console.log("resData ", resData);
+            // getting data
+            getProducts(commonToken, URLParams)
+                .then((res) => {
+                    const resData = res.data;
+                    // console.log("resData ", resData);
 
-                // disabling loading
-                setAllProductsLoading(false);
+                    // disabling loading
+                    setAllProductsLoading(false);
 
-                // scroll the page to the top
-                window.scrollTo(0, 0);
+                    // scroll the page to the top
+                    window.scrollTo(0, 0);
 
-                // if request succesfull
-                if (resData && resData.success) {
-                    setAllProducts(resData.data);
-                }
+                    // if request succesfull
+                    if (resData && resData.success) {
+                        setAllProducts(resData.data);
+                    }
 
-                // if request is not succesfull
-                if (resData && resData.error) {
+                    // if request is not succesfull
+                    if (resData && resData.error) {
+                        // dismissing all the previous toasts first
+                        toast.dismiss();
+
+                        // showing the error message
+                        toast.error(ERROR_WHILE_FETCHING_PRODUCTS, {
+                            autoClose: 3000,
+                            onClose: () => {},
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(
+                        `${ERROR_WHILE__NAME} getProducts `,
+                        err.message
+                    );
+
                     // dismissing all the previous toasts first
                     toast.dismiss();
 
                     // showing the error message
-                    toast.error(ERROR_WHILE_FETCHING_PRODUCTS, {
-                        autoClose: 3000,
-                        onClose: () => {},
+                    toast.error(UNKNOWN_ERROR_OCCURED, {
+                        autoClose: 2500,
+                        onClose: () => {
+                            // disabling loading
+                            setAllProductsLoading(false);
+                        },
                     });
-                }
-            })
-            .catch((err) => {
-                console.log(`${ERROR_WHILE__NAME} getProducts `, err.message);
-
-                // dismissing all the previous toasts first
-                toast.dismiss();
-
-                // showing the error message
-                toast.error(UNKNOWN_ERROR_OCCURED, {
-                    autoClose: 2500,
-                    onClose: () => {
-                        // disabling loading
-                        setAllProductsLoading(false);
-                    },
                 });
-            });
-    }, [id]);
+        }
+    }, [id, commonToken]);
 
     // getting products
     useEffect(() => {
@@ -158,22 +169,109 @@ function ProductsListing(props) {
     }, [categoryId, subCategoryId, id]);
 
     // add to cart button hadling
-    const handleAddToCartButtonClick = (ev, item) => {
-        console.log("item ", item);
+    const handleAddToCartButtonClick = (ev, selectedProduct) => {
         ev.preventDefault();
         // setting id of the current loading button
-        setButtonLoadingId(item.product_id);
+        setButtonLoadingId(selectedProduct.product_id);
         setAllButtonsDisabled(true);
 
-        // saving user to the global cart
-        props.setCartItem(item);
+        (function () {
+            const cartItemToSave = {
+                combinations: selectedProduct.combinations ?? "",
+                price: selectedProduct.price,
+                product_id: selectedProduct.product_id,
+                product_name: selectedProduct.product_name,
+                quantity: 1,
+                sku: selectedProduct.sku,
+                temp_order_id: currentUser?.tempOrderId,
+                user_id: currentUser?.userId ?? null,
+            };
 
-        // resetting id of the current loading button
-        setTimeout(() => {
-            console.log("props ", props);
-            setButtonLoadingId("");
-            setAllButtonsDisabled(false);
-        }, 2000);
+            // getting data
+            saveToCart(commonToken, cartItemToSave)
+                .then((res) => {
+                    console.log("resData from saveToCart ", res);
+                    const resData = res.data;
+
+                    // disabling loading
+                    setButtonLoadingId("");
+
+                    // if request succesfull
+                    if (resData && resData.success) {
+                        const cartData = resData.data;
+                        let cartItems = [];
+
+                        // generating items
+                        cartData?.content.forEach((item) =>
+                            cartItems.push({
+                                cart_id: item.cart_id,
+                                combinations: item.combinations,
+                                price: item.price * item.quantity,
+                                product_id: item.product_id,
+                                product_name: item.product_name,
+                                quantity: item.quantity,
+                                sku: item.sku,
+                                temp_order_id: item.temp_order_id,
+                                user_id: item.user_id,
+                            })
+                        );
+
+                        // saving items to global store
+                        setCartItem(cartItems);
+                        setCartDetails({
+                            cart_items: cartData.cart_items,
+                            cart_qty: cartData.cart_qty,
+                            cart_total: cartData.cart_total,
+                        });
+
+                        // dismissing all the previous toasts first
+                        toast.dismiss();
+
+                        // showing the error message
+                        toast.success(ADDED_TO_CART_SUCCESSFULLY, {
+                            autoClose: 3000,
+                            onClose: () => {
+                                // enabling all buttons
+                                setAllButtonsDisabled(false);
+                            },
+                        });
+                    }
+
+                    // if request is not succesfull
+                    if (resData && resData.error) {
+                        // dismissing all the previous toasts first
+                        toast.dismiss();
+
+                        // showing the error message
+                        toast.error(ERROR_WHILE_SAVING_PRODUCT_TO_CART, {
+                            autoClose: 3000,
+                            onClose: () => {
+                                // enabling all buttons
+                                setAllButtonsDisabled(false);
+                            },
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(
+                        `${ERROR_WHILE__NAME} saveToCart `,
+                        err.message
+                    );
+
+                    // dismissing all the previous toasts first
+                    toast.dismiss();
+
+                    // showing the error message
+                    toast.error(UNKNOWN_ERROR_OCCURED, {
+                        autoClose: 3000,
+                        onClose: () => {
+                            // disabling loading and ennabling buttons
+                            setButtonLoadingId("");
+                            setAllButtonsDisabled(false);
+                        },
+                    });
+                });
+        })();
     };
 
     const manageSortingOrder = (ev, order) => {
@@ -781,13 +879,16 @@ function ProductsListing(props) {
 
 const getDataFromStore = (state) => {
     return {
-        cart: state.cart,
+        cartItems: state.cart.cartItems,
+        currentUser: state.auth.currentUser,
+        commonToken: state.auth.commonToken,
     };
 };
 
 const dispatchActionsToProps = (dispatch) => {
     return {
         setCartItem: (bool) => dispatch(setCartItem(bool)),
+        setCartDetails: (bool) => dispatch(setCartDetails(bool)),
     };
 };
 

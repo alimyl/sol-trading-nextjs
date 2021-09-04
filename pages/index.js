@@ -1,22 +1,18 @@
-import React, { useEffect } from "react"
+import React, { useEffect } from "react";
 
 // next - router
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 
 // main function
 function Home() {
-	const router = useRouter()
+    const router = useRouter();
 
-	// on page load redirecting to the homepage
-	useEffect(() => {
-		router.push('/home')
-	}, [])
+    // on page load redirecting to the homepage
+    useEffect(() => {
+        router.push("/home");
+    }, [router]);
 
-	return (
-		<React.Fragment>
-			{/* root of the page */}
-		</React.Fragment>
-	)
+    return <React.Fragment>{/* root of the page */}</React.Fragment>;
 }
 
-export default Home
+export default Home;

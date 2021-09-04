@@ -38,19 +38,20 @@ export default function Radio(props) {
             >
                 {data.variation_name}
             </span>
-            <div className="radio">
+            <div className="radio d-flex flex-wrap">
                 {data?.options?.length &&
                     data.options.map((item) => {
                         return (
                             <React.Fragment key={item.id}>
-                                <label className="d-inline-flex mb-1">
+                                <label className="d-inline-flex mb-1 me-2">
                                     <input
                                         type="radio"
-                                        className={"mt-1"}
+                                        className={"position-relative"}
                                         name={item.option_variation_name}
                                         value={item.value}
                                         checked={selectedValue === item.value}
                                         onChange={handleValueChange}
+                                        style={{ top: 5 }}
                                     />
                                     <span className="ms-2">{item.value}</span>
                                 </label>

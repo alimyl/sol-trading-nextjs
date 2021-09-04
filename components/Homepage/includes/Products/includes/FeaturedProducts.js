@@ -145,7 +145,7 @@ export default function FeaturedProducts() {
                                 {/* details */}
                                 <div className="product-details mt-2">
                                     <div className="name">
-                                        <a href="/" className="text-decoration-none st-text-light st-fw-600" title={item.name}>{item.name}</a>
+                                        <a className="text-decoration-none st-text-light st-fw-600" title={item.name}>{item.name}</a>
                                     </div>
                                     <p className="price st-fs-17 st-fw-600 mt-2">{item.currencyType + item.price}</p>
                                     <button

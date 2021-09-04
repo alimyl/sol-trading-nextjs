@@ -109,11 +109,10 @@
     }
 }
 
-
 // app thumb slider
 .app-thumb-slider {
     .swiper-slide-thumb-active {
-        >.inner {
+        > .inner {
             border-color: $primary-color !important;
             cursor: default !important;
         }
@@ -122,5 +121,16 @@
 
 // st common table
 .st-common-table {
-    
+}
+
+// st global loading
+.st-global-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 999;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    color: $primary-color;
 }

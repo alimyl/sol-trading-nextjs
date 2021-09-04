@@ -8,16 +8,16 @@ import quanitySelectorStyles from './styles/quanitySelector.module.scss'
 import FeatherIcon from 'feather-icons-react';
 
 export default function QuantitySelector(props) {
+    // consts
     const [inputVal, setInputVal] = useState(1)
 
+    const { handleIncrease, handleDecrease } = props
+
     useEffect(() => {
-        const defaultValue = props.defaultValue ?? props.defaultValue
+        const defaultValue = props.defaultValue ?? 1
         if (defaultValue) {
             // setting default value
             setInputVal(parseInt(defaultValue))
-        }
-        return () => {
-
         }
     }, [props])
 
@@ -27,7 +27,7 @@ export default function QuantitySelector(props) {
             setInputVal(inputVal + 1)
 
             // sending value to parent component
-            props.getQuantity && props.getQuantity(inputVal + 1)
+            props.getQuantity && props.getQuantity("add", inputVal + 1)
         }
     }
 
@@ -37,7 +37,7 @@ export default function QuantitySelector(props) {
             setInputVal(inputVal - 1)
 
             // sending value to parent component
-            props.getQuantity && props.getQuantity(inputVal - 1)
+            props.getQuantity && props.getQuantity("subtract", inputVal - 1)
         }
     }
 
@@ -63,7 +63,7 @@ export default function QuantitySelector(props) {
                 <input
                     type="number"
                     className={`${quanitySelectorStyles["form-control-in-qs"]} form-control rounded-0 text-center`}
-                    defaultValue={inputVal}
+                    value={inputVal}
                     onChange={handleChange}
                 />
 
