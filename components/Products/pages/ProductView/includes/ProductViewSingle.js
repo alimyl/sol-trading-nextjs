@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // redux
 import { connect } from "react-redux";
@@ -60,16 +60,32 @@ function ProductViewSingle(props) {
         currentUser,
         setCartItem,
         setCartDetails,
+        getData,
     } = props;
 
     // states
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [buttonLoading, setButtonLoading] = useState(false);
     const [cartItemQuantity, setCartItemQuantity] = useState(1);
+    const [hasMinQuantity, setHasMinQuantity] = useState(null);
+    const [hasMaxQuantity, setHasMaxQuantity] = useState(null);
+
+    useEffect(() => {
+        // if product have minumum quanity
+        if (productDetails?.min_order_quantity > 0) {
+            setHasMinQuantity(productDetails.min_order_quantity);
+        }
+
+        // if product have max quanity
+        if (productDetails?.max_order_quantity > 0) {
+            setHasMaxQuantity(productDetails.max_order_quantity);
+        }
+        return () => {};
+    }, [productDetails]);
 
     // quantity seleced by the user
-    const getQuantity = (action, value, item) => {
-        // setting quantity
+    const getQuantity = (value) => {
+        console.log("value ", value);
         setCartItemQuantity(value);
     };
 
@@ -112,7 +128,8 @@ function ProductViewSingle(props) {
                             cartItems.push({
                                 cart_id: item.cart_id,
                                 combinations: item.combinations,
-                                price: item.price * item.quantity,
+                                price: item.price,
+                                totalPrice: item.price * item.quantity,
                                 product_id: item.product_id,
                                 product_name: item.product_name,
                                 quantity: item.quantity,
@@ -316,6 +333,21 @@ function ProductViewSingle(props) {
                                         <span>In Stock.</span>
                                     </span>
                                 )}
+                                {
+                                    /* low stock */
+                                    productDetails.stock == 10 && (
+                                        <span
+                                            className={`${productViewStyles["low-stock"]} d-flex align-items-center st-fw-600 st-fs-13 st-text-primary mt-3`}
+                                        >
+                                            <FeatherIcon
+                                                icon="alert-circle"
+                                                size="17"
+                                                className={`me-1`}
+                                            />
+                                            <span>Hurry only 10 left!!</span>
+                                        </span>
+                                    )
+                                }
                             </p>
                             <div
                                 className={`${productViewStyles["product-details"]}`}
@@ -341,6 +373,9 @@ function ProductViewSingle(props) {
                                         <VariationViewer
                                             variantMainFields={
                                                 variantMainFields
+                                            }
+                                            getData={(type, data) =>
+                                                getData(type, data)
                                             }
                                         />
                                     </div>
@@ -441,14 +476,9 @@ function ProductViewSingle(props) {
                                     </span>
                                     <div className="">
                                         <QuantitySelector
-                                            defaultValue={cartItemQuantity}
-                                            getQuantity={(action, value) =>
-                                                getQuantity(
-                                                    action,
-                                                    value,
-                                                    productDetails
-                                                )
-                                            }
+                                            getQuantity={getQuantity}
+                                            minQuantity={hasMinQuantity}
+                                            maxQuantity={hasMaxQuantity}
                                         />
                                     </div>
                                 </div>
@@ -458,7 +488,24 @@ function ProductViewSingle(props) {
                                 className={`${productViewStyles["product-price"]} d-flex align-items-center border-top pt-2 pt-lg-4 mt-3 mt-lg-4`}
                             >
                                 {/* left */}
-                                <div className="pp_lt"></div>
+                                <p
+                                    className={`${productViewStyles["price"]} mb-0`}
+                                >
+                                    {productDetails?.promo_price ? (
+                                        <>
+                                            <span>
+                                                ${productDetails.promo_price}
+                                            </span>
+                                            <span
+                                                className={`${productViewStyles["promo-price"]} ms-2`}
+                                            >
+                                                {productDetails.price}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <span>${productDetails.price}</span>
+                                    )}
+                                </p>
                                 {/* right */}
                                 <div className="pp_rt ms-auto">
                                     <button

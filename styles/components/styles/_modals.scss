@@ -5,7 +5,37 @@
         border: none !important;
         border-bottom: 3px solid $primary-color !important;
     }
-    .modal-header {
-        
+    .modal-body {
+        padding: 0;
+    }
+
+    // header
+    .st-modal-header {
+        border-bottom: 1px solid $light-gray-color2;
+        padding: 15px;
+        .icon {
+            line-height: 0;
+        }
+    }
+    // footer
+    .st-modal-footer {
+        border-top: 1px solid $light-gray-color2;
+        padding: 15px;
+    }
+
+    // content
+    .st-modal-content {
+        padding: 20px;
+    }
+
+    .modal-loading {
+        display: none !important;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba($color: #fff, $alpha: 0.5);
+        // color: $primary-color;
+        z-index: 12;
     }
 }

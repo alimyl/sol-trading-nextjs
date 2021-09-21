@@ -21,9 +21,7 @@ import headerStyles from "../../styles/header.module.scss";
 import stLogo from "public/images/sol-trading-logo.gif";
 
 // APIs
-import {
-    getCategoriesTree,
-} from "utlis/Apis/Categories_API";
+import { getCategoriesTree } from "utlis/Apis/Categories_API";
 
 // app messages
 import {
@@ -74,11 +72,6 @@ function HeaderMenu(props) {
         getCategoriesList();
     }, [getCategoriesList]);
 
-    useEffect(() => {
-        console.log("v ", props);
-        return () => { };
-    }, [props]);
-
     return (
         <div id={headerStyles["main-bar-wrapper"]}>
             <Container>
@@ -128,37 +121,38 @@ function HeaderMenu(props) {
                                         </a>
                                     </Link>
                                     {/* MENU */}
-                                    {categories?.length
-                                        ? (
-                                            <ul
-                                                className={`${headerStyles["st-sub-menu-nav-in-head"]} st-sub-menu-nav list-unstyled position-absolute`}
-                                            >
-                                                {
-                                                    categories?.map((item, index) => {
-                                                        return (
-                                                            <React.Fragment
-                                                                key={item.category_id}
-                                                            >
-                                                                <HeaderMenuItem
-                                                                    menuItem={item}
-                                                                    catName={item.category_url}
-                                                                    menuItemIndex={
-                                                                        index
-                                                                    }
-                                                                />
-                                                            </React.Fragment>
-                                                        );
-                                                    })
-                                                }
-                                            </ul>
-                                        ) : null}
+                                    {categories?.length ? (
+                                        <ul
+                                            className={`${headerStyles["st-sub-menu-nav-in-head"]} st-sub-menu-nav list-unstyled position-absolute`}
+                                        >
+                                            {categories?.map((item, index) => {
+                                                return (
+                                                    <React.Fragment
+                                                        key={item.category_id}
+                                                    >
+                                                        <HeaderMenuItem
+                                                            menuItem={item}
+                                                            catName={
+                                                                item.category_url
+                                                            }
+                                                            menuItemIndex={
+                                                                index
+                                                            }
+                                                        />
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                        </ul>
+                                    ) : null}
                                 </li>
                                 <li
                                     className={`${headerStyles["st-menu-nav-item-in-head"]} st-menu-nav-item position-relative`}
                                 >
-                                    <a className="st-menu-nav-link d-block text-decoration-none text-uppercase">
-                                        contact us
-                                    </a>
+                                    <Link href="/contact-us">
+                                        <a className="st-menu-nav-link d-block text-decoration-none text-uppercase">
+                                            contact us
+                                        </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </div>

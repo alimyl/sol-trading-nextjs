@@ -10,28 +10,28 @@ import Dropdown from "./includes/Dropdown";
 
 export default function VariationViewer(props) {
     // consts
-    const { variantMainFields } = props;
+    const { variantMainFields, getData } = props;
     return (
         <React.Fragment>
             {variantMainFields?.length
                 ? variantMainFields.map((item) => {
-                      return (
-                          <div
-                              key={item.id}
-                              className={`${productViewStyles["item"]} st-fs-14 pb-3`}
-                          >
-                              {item?.display_type === "rectangle_list" && (
-                                  <Rectangle data={item} />
-                              )}
-                              {item?.display_type === "radio_buttons" && (
-                                  <Radio data={item} />
-                              )}
-                              {item?.display_type === "dropdown" && (
-                                  <Dropdown data={item} />
-                              )}
-                          </div>
-                      );
-                  })
+                    return (
+                        <div
+                            key={item.id}
+                            className={`${productViewStyles["item"]} st-fs-14 pb-3`}
+                        >
+                            {item?.display_type === "rectangle_list" && (
+                                <Rectangle getData={(type, data) => getData(type, data)} data={item} />
+                            )}
+                            {item?.display_type === "radio_buttons" && (
+                                <Radio getData={(type, data) => getData(type, data)} data={item} />
+                            )}
+                            {item?.display_type === "dropdown" && (
+                                <Dropdown getData={(type, data) => getData(type, data)} data={item} />
+                            )}
+                        </div>
+                    );
+                })
                 : null}
         </React.Fragment>
     );

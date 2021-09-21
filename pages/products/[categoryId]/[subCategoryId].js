@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 
 // next - head
-import Head from 'next/head'
+import Head from "next/head";
 
 // listing page
-import ProductsListing from 'components/Products/pages/ProductsListing'
+import ProductsListing from "components/Products/pages/ProductsListing";
 
-function subCategoryId() {
+function SubCategory() {
     return (
         <React.Fragment>
             {/* display name and icon in the title of the browser */}
@@ -19,7 +19,7 @@ function subCategoryId() {
             {/* actual body of the page */}
             <ProductsListing />
         </React.Fragment>
-    )
+    );
 }
 
-export default subCategoryId
+export default SubCategory;

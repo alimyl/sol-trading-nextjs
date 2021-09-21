@@ -5,6 +5,8 @@ $fieldsHeightAboveSM: 40px;
 $defaultInputBorderColor: #cccccc;
 $placeholderColor: #8a8a8a;
 
+$bottomGap: 20px;
+
 /* FORM FIELDS STYLES */
 .st-form {
     input:not([type="radio"]):not([type="checkbox"]):not(.select2-search__field),
@@ -37,6 +39,15 @@ $placeholderColor: #8a8a8a;
         &:focus {
             border-color: $primary-color;
             @include box-shadow(0, 0, 1px, 1px, $primary-color !important);
+        }
+    }
+
+    // LABEL
+    label {
+        .required {
+            color: $text__danger-color;
+            position: relative;
+            left: 3px;
         }
     }
 
@@ -149,6 +160,56 @@ $placeholderColor: #8a8a8a;
             right: 10px;
         }
     }
+
+    &.has-msg {
+        margin-bottom: 0;
+        padding-bottom: $bottomGap;
+        .st-form-msg {
+            opacity: 1;
+            visibility: visible;
+        }
+        &.msg-error {
+            // on foucs
+            input:not([type="radio"]):not([type="checkbox"]),
+            select,
+            textarea {
+                // border-color: $bg__danger;
+                // @include box-shadow(0, 0, 1px, 1px, $bg__danger !important);
+                // color: $text__danger-color;
+            }
+            // icon
+            .icon {
+                color: $text__danger-color;
+            }
+            // msg
+            .st-form-msg {
+                p {
+                    color: $text__danger-color;
+                }
+            }
+        }
+        // message success
+        &.msg-success {
+            // on foucs
+            input:not([type="radio"]):not([type="checkbox"]),
+            select,
+            textarea {
+                // border-color: $bg__success;
+                // @include box-shadow(0, 0, 1px, 1px, $bg__success !important);
+                // color: $text__success-color;
+            }
+            // icon
+            .icon {
+                color: $text__success-color;
+            }
+            // msg
+            .st-form-msg {
+                p {
+                    color: $text__success-color;
+                }
+            }
+        }
+    }
 }
 
 // ST CHECKBOX
@@ -178,6 +239,74 @@ $placeholderColor: #8a8a8a;
                         opacity: 1;
                     }
                 }
+            }
+        }
+    }
+}
+
+// ST RADIO
+.st-radio {
+    $heightWidth: 20px;
+    .round {
+        height: $heightWidth;
+        width: $heightWidth;
+        border-radius: 50%;
+        border: 1px solid #666 !important;
+        @include transition;
+        line-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:after {
+            content: "";
+            height: $heightWidth - 5;
+            width: $heightWidth - 5;
+            border-radius: 50%;
+            background-color: $text__dark-color;
+            position: relative;
+            left: 0.1px;
+            @include transition;
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .text {
+        color: #666;
+        padding-left: 10px;
+        top: -1px;
+    }
+
+    > input:checked {
+        + .round {
+            border-color: $text__dark-color;
+            &::after {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+        ~ .text {
+            color: $text__dark-color;
+        }
+    }
+}
+
+// st form rectangle
+.st-form-rectangle {
+    cursor: pointer;
+    &:not(:last-child) {
+        margin-right: 15px;
+    }
+    .rect {
+        display: block;
+        padding: 7px 15px;
+        border: 2px solid #ddd;
+    }
+
+    >input {
+        &:checked {
+            + .rect {
+                border-color: $primary-color;
             }
         }
     }

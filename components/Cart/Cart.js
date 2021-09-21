@@ -91,7 +91,7 @@ function Cart(props) {
         console.log("value ", value);
 
         // updating api
-        handleUpdate(action, item);
+        handleUpdate(value, item);
     };
 
     // handle delete cart item
@@ -186,7 +186,7 @@ function Cart(props) {
     };
 
     // handle delete cart item
-    const handleUpdate = (action, item) => {
+    const handleUpdate = (quantity, item) => {
         // enable loading
         setCartLoading(true);
 
@@ -194,8 +194,7 @@ function Cart(props) {
             const dataToBeAdded = {
                 temp_order_id: item.temp_order_id,
                 product_id: item.product_id,
-                quantity:
-                    action === "add" ? item.quantity + 1 : item.quantity - 1,
+                quantity,
             };
             // deleting cart data
             updateToCart(commonToken, dataToBeAdded)
@@ -216,7 +215,8 @@ function Cart(props) {
                             cartItems.push({
                                 cart_id: item.cart_id,
                                 combinations: item.combinations,
-                                price: item.price * item.quantity,
+                                price: item.price,
+                                totalPrice: item.price * item.quantity,
                                 product_id: item.product_id,
                                 product_name: item.product_name,
                                 quantity: item.quantity,
@@ -429,7 +429,10 @@ function Cart(props) {
                                                             <p
                                                                 className={`${cartStyles["desc"]} st-fw-600 mb-0`}
                                                             >
-                                                                ${item.price}
+                                                                $
+                                                                {
+                                                                    item.totalPrice
+                                                                }
                                                             </p>
                                                         </td>
                                                     </tr>
@@ -490,9 +493,11 @@ function Cart(props) {
                                         <button className="btn st-btn st-btn-secondary text-uppercase me-2">
                                             save to quote
                                         </button>
-                                        <button className="btn st-btn st-btn-primary text-uppercase">
-                                            proceed to checkout
-                                        </button>
+                                        <Link href="/checkout">
+                                            <a className="btn st-btn st-btn-primary text-uppercase">
+                                                proceed to checkout
+                                            </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

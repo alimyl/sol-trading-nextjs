@@ -206,7 +206,8 @@ function ProductsListing(props) {
                             cartItems.push({
                                 cart_id: item.cart_id,
                                 combinations: item.combinations,
-                                price: item.price * item.quantity,
+                                price: item.price,
+                                totalPrice: item.price * item.quantity,
                                 product_id: item.product_id,
                                 product_name: item.product_name,
                                 quantity: item.quantity,

@@ -17,6 +17,7 @@ export async function saveToCart(token, data) {
                 temp_order_id: data.temp_order_id,
                 product_id: data.product_id,
                 quantity: data.quantity,
+                mode: "add",
             },
             {
                 headers: {
@@ -46,6 +47,7 @@ export async function updateToCart(token, data) {
                 temp_order_id: data.temp_order_id,
                 product_id: data.product_id,
                 quantity: data.quantity,
+                mide: "update",
             },
             {
                 headers: {
@@ -90,13 +92,10 @@ export async function getCartItems(token, tempOrderId) {
 // delte cart item
 export let cancelDeleteCartItemApi;
 export async function deleteCartItem(token, data) {
-    console.log("delete data ", data)
+    console.log("delete data ", data);
     if (token && data) {
         const cartData = await axios.delete(
-            apiUrl_forCart + data.cart_id,
-            {
-                temp_order_id: data.temp_order_id,
-            },
+            apiUrl_forCart + data.cart_id + "/" + data.temp_order_id,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

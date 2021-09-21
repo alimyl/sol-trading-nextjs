@@ -7,51 +7,142 @@ import quanitySelectorStyles from './styles/quanitySelector.module.scss'
 // icons : feather
 import FeatherIcon from 'feather-icons-react';
 
+// react toastify
+import { toast } from "react-toastify";
+
 export default function QuantitySelector(props) {
+    // props
+    const {
+        defaultValue,
+        getQuantity,
+        minQuantity,
+        maxQuantity,
+        minQuantityMsg,
+        maxQuantityMsg,
+    } = props
+
     // consts
+    const TOAST_TIME = 1800
+    const ACTION_ADD = "add"
+    const ACTION_SUBTRACT = "subtract"
+    const MIN_ERROR_MSG = minQuantityMsg || `Sorry you can't select less than ${minQuantity}`
+    const MAX_ERROR_MSG = maxQuantityMsg || `Sorry you can't select more than ${maxQuantity}`
+
+    // states
     const [inputVal, setInputVal] = useState(1)
+    const [buttonDisabled, setButtonDisabled] = useState(false)
 
-    const { handleIncrease, handleDecrease } = props
-
+    // setting default value
     useEffect(() => {
-        const defaultValue = props.defaultValue ?? 1
-        if (defaultValue) {
-            // setting default value
-            setInputVal(parseInt(defaultValue))
+        if (defaultValue || minQuantity) {
+            // if min value is defined then use that else use default value
+            setInputVal(parseInt(defaultValue) || parseInt(minQuantity))
         }
-    }, [props])
+    }, [minQuantity, defaultValue])
 
-    // add quantity
-    const addQuantity = () => {
-        if (inputVal > 0) {
-            setInputVal(inputVal + 1)
+    // change quantity
+    const changeQuantity = (action) => {
+        // if adding value
+        if (action === ACTION_ADD) {
+            if (inputVal >= 1) {
+                // if max quantity is defined
+                if (inputVal >= maxQuantity) {
+                    // if default value is greter than the allowed value, setting the max allowed value to the input
+                    if (inputVal > maxQuantity) {
+                        let updatedValue = parseInt(maxQuantity)
+                        setInputVal(updatedValue)
 
-            // sending value to parent component
-            props.getQuantity && props.getQuantity("add", inputVal + 1)
+                        // sending value to parent component
+                        getQuantity && getQuantity(updatedValue)
+                    }
+
+                    // disabling the button
+                    setButtonDisabled(true)
+
+                    // dismissing all the previous toasts first
+                    toast.dismiss();
+
+                    // showing the error message
+                    toast.error(MAX_ERROR_MSG, {
+                        autoClose: TOAST_TIME,
+                        onClose: () => {
+                            // enabling the button
+                            setButtonDisabled(false)
+                        },
+                    });
+
+                    return
+                }
+
+                // updating the values if no issue
+                const updatedValue = inputVal + 1
+                setInputVal(updatedValue)
+
+                // sending value to parent component
+                getQuantity && getQuantity(updatedValue)
+            }
         }
-    }
 
-    // remove quantity
-    const removeQuantity = () => {
-        if (inputVal > 1) {
-            setInputVal(inputVal - 1)
+        // if adding value
+        if (action === ACTION_SUBTRACT) {
+            if (inputVal > 1) {
+                // if min quantity is defined
+                if (inputVal <= minQuantity) {
+                    // if default value is lesser than the allowed value, setting the min allowed value to the input
+                    if (inputVal < minQuantity) {
+                        let updatedValue = parseInt(minQuantity)
+                        setInputVal(updatedValue)
 
-            // sending value to parent component
-            props.getQuantity && props.getQuantity("subtract", inputVal - 1)
+                        // sending value to parent component
+                        getQuantity && getQuantity(updatedValue)
+                    }
+
+                    // disabling the button
+                    setButtonDisabled(true)
+
+                    // dismissing all the previous toasts first
+                    toast.dismiss();
+
+                    // showing the error message
+                    toast.error(MIN_ERROR_MSG, {
+                        autoClose: TOAST_TIME,
+                        onClose: () => {
+                            // enabling the button
+                            setButtonDisabled(false)
+                        },
+                    });
+
+                    return
+                }
+
+                // updating the values if no issue
+                const updatedValue = inputVal - 1
+                setInputVal(updatedValue)
+
+                // sending value to parent component
+                getQuantity && getQuantity(updatedValue)
+            }
         }
     }
 
     // input changing
     const handleChange = (ev) => {
         ev.preventDefault()
+
+        const inpVal = ev.target.value
+        if (inpVal?.length) {
+            // setting value
+            setInputVal(parseInt(inpVal))
+        }
     }
 
     return (
         <div className={quanitySelectorStyles["st-quantity-selector"]}>
             <div className={`${quanitySelectorStyles["inner"]} st-form no-shadow d-inline-flex`}>
                 <button
-                    className={`${quanitySelectorStyles["st-btn-in-qs"]} st-btn plus text-uppercase no-min-width d-flex align-items-center justify-content-center p-0`}
-                    onClick={removeQuantity}
+                    className={`${quanitySelectorStyles["st-btn-in-qs"]} ${buttonDisabled ? 'disabled' : ''} st-btn plus text-uppercase no-min-width d-flex align-items-center justify-content-center p-0`}
+                    disabled={buttonDisabled}
+                    onClick={() => changeQuantity(ACTION_SUBTRACT)}
                 >
                     <FeatherIcon
                         icon="minus"
@@ -68,8 +159,9 @@ export default function QuantitySelector(props) {
                 />
 
                 <button
-                    className={`${quanitySelectorStyles["st-btn-in-qs"]} st-btn minus text-uppercase no-min-width d-flex align-items-center justify-content-center p-0`}
-                    onClick={addQuantity}
+                    className={`${quanitySelectorStyles["st-btn-in-qs"]} ${buttonDisabled ? 'disabled' : ''} st-btn minus text-uppercase no-min-width d-flex align-items-center justify-content-center p-0`}
+                    disabled={buttonDisabled}
+                    onClick={() => changeQuantity(ACTION_ADD)}
                 >
                     <FeatherIcon
                         icon="plus"

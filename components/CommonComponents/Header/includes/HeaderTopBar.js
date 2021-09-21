@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 // redux
 import { connect } from "react-redux";
 
+// nextjs - link
+import Link from "next/link";
+
 // bootstrap
 import { Container } from "react-bootstrap";
 
@@ -76,26 +79,30 @@ function HeaderTopBar(props) {
                     <div className="rt-sec ms-auto">
                         <div className="inner d-flex align-items-center">
                             {/* link */}
-                            <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
-                                <FeatherIcon
-                                    icon="user"
-                                    size="15"
-                                    className="position-relative me-2"
-                                    style={{ top: 1 }}
-                                />
-                                <span>Login</span>
-                            </a>
+                            <Link href="/login">
+                                <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
+                                    <FeatherIcon
+                                        icon="user"
+                                        size="15"
+                                        className="position-relative me-2"
+                                        style={{ top: 1 }}
+                                    />
+                                    <span>Login</span>
+                                </a>
+                            </Link>
 
                             {/* link */}
-                            <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
-                                <FeatherIcon
-                                    icon="user-plus"
-                                    size="15"
-                                    className="position-relative me-2"
-                                    style={{ top: 1 }}
-                                />
-                                <span>Register</span>
-                            </a>
+                            <Link href="/register">
+                                <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
+                                    <FeatherIcon
+                                        icon="user-plus"
+                                        size="15"
+                                        className="position-relative me-2"
+                                        style={{ top: 1 }}
+                                    />
+                                    <span>Register</span>
+                                </a>
+                            </Link>
 
                             <div
                                 className={`${
@@ -115,7 +122,9 @@ function HeaderTopBar(props) {
                                         className="position-relative me-2"
                                         style={{ top: 1 }}
                                     />
-                                    <span>{`(${cartDetails?.cart_qty ?? 0})`}</span>
+                                    <span>{`(${
+                                        cartDetails?.cart_qty ?? 0
+                                    })`}</span>
                                 </a>
 
                                 {/* cart dropdown */}

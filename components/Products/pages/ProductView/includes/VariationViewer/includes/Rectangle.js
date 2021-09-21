@@ -8,7 +8,7 @@ import { Form } from "react-bootstrap";
 
 export default function Rectangle(props) {
     // consts
-    const { data } = props;
+    const { data, getData } = props;
 
     // states
     const [selectedValue, setSelectedValue] = useState("default");
@@ -31,6 +31,9 @@ export default function Rectangle(props) {
 
         if (inpVal) {
             setSelectedValue(inpVal);
+
+            // sending data back
+            getData("rectangle_list", inpVal);
         }
     };
 
@@ -41,7 +44,26 @@ export default function Rectangle(props) {
             >
                 {data.variation_name}
             </span>
-            <Form.Group className="st-form" style={{ width: 168 }}>
+
+            <div className="rectangles-list">
+                {/* rectangle */}
+                {data?.options?.length &&
+                    data.options.map((item) => (
+                        <label key={item.id} className="st-form-rectangle">
+                            <input
+                                type="radio"
+                                className="d-none"
+                                name={item.option_variation_name}
+                                value={item.value}
+                                checked={selectedValue === item.value}
+                                onChange={handleValueChange}
+                            />
+                            <span className="rect">{item.value}</span>
+                        </label>
+                    ))}
+            </div>
+
+            {/* <Form.Group className="st-form" style={{ width: 168 }}>
                 <Form.Control
                     as="select"
                     value={selectedValue}
@@ -58,7 +80,7 @@ export default function Rectangle(props) {
                             </React.Fragment>
                         ))}
                 </Form.Control>
-            </Form.Group>
+            </Form.Group> */}
         </React.Fragment>
     );
 }

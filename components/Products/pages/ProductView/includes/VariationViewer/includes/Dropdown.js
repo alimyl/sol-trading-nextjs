@@ -8,7 +8,7 @@ import { Form } from "react-bootstrap";
 
 export default function Dropdown(props) {
     // consts
-    const { data } = props;
+    const { data, getData } = props;
 
     // states
     const [selectedValue, setSelectedValue] = useState("default");
@@ -31,6 +31,9 @@ export default function Dropdown(props) {
 
         if (inpVal) {
             setSelectedValue(inpVal);
+
+            // sending data back
+            getData("dropdown", inpVal);
         }
     };
 
@@ -45,7 +48,7 @@ export default function Dropdown(props) {
                 <Form.Control
                     as="select"
                     value={selectedValue}
-                    className="cursor-pointer no-select-icon text-center"
+                    className="cursor-pointer no-select-icon"
                     onChange={handleValueChange}
                 >
                     <option value="default" disabled>

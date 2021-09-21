@@ -5,7 +5,7 @@ import productViewStyles from "../../../../../styles/products.module.scss";
 
 export default function Radio(props) {
     // consts
-    const { data } = props;
+    const { data, getData } = props;
 
     // states
     const [selectedValue, setSelectedValue] = useState("");
@@ -28,6 +28,9 @@ export default function Radio(props) {
 
         if (inpVal) {
             setSelectedValue(inpVal);
+
+            // sending data back
+            getData("radio_buttons", inpVal);
         }
     };
 
