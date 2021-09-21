@@ -1,0 +1,12 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// AUTH CSS
+
+// tabs view
+.auth-view-container {
+    @include min_width($md-min) {
+        width: 450px;
+    }
+}

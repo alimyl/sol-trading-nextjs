@@ -1,0 +1,14 @@
+// IMPORTANT SCSS FILES
+@import "/styles/components/variables";
+@import "/styles/components/mixins";
+
+// CONTACT CSS
+.page-not-found-wrapper {
+}
+.page-not-found {
+    // min-height: 400px;
+
+    .heading {
+        font-size: 30px;
+    }
+}
