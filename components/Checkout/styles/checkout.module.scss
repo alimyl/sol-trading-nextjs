@@ -69,28 +69,29 @@
 
 // shipping info form
 .shipping-info-form {
-    .address-box {
-        margin-right: 15px;
-        margin-bottom: 20px;
-        > .inner {
-            box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.2);
-            padding: 15px;
+}
+
+.address-box {
+    margin-right: 15px;
+    margin-bottom: 20px;
+    width: 250px;
+
+    > .inner {
+        box-shadow: 0px 0px 5px rgb(0, 0, 0, 0.2);
+        padding: 15px;
+        > p {
+            padding: 0 0 10px;
+        }
+        > div {
+            line-height: 20px;
             > p {
-                padding: 0 0 10px;
             }
-            > div {
-                line-height: 20px;
-                > p {
-                }
-            }
-            > a {
-            }
+        }
+        > a {
         }
     }
 }
 
-
 // shipping method content
 .shipping-method-content {
-    
 }

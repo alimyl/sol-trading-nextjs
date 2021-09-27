@@ -17,14 +17,14 @@ import Head from "next/head";
 // import { getProducts } from "utlis/Apis/Products_API";
 
 // listing page
-import ProductsListing from "components/Products/pages/ProductsListing";
+import ProductsListing from "components/Shop/pages/ProductsListing";
 
 function Category(props) {
     return (
         <React.Fragment>
             {/* display name and icon in the title of the browser */}
             <Head>
-                <title>Sol Trading | Products</title>
+                <title>Sol Trading | Shop</title>
                 <meta name="description" content="Sol Trading" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>

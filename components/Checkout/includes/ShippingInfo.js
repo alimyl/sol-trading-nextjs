@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 // next link
-import Link from 'next/link'
+import Link from "next/link";
 
 // icons : feather
 import FeatherIcon from "feather-icons-react";
@@ -15,52 +15,58 @@ import checkoutStyles from "../styles/checkout.module.scss";
 // formik
 import {
     useFormik, //hook for functonal components
-} from 'formik'
+} from "formik";
 
 // yup
-import * as Yup from 'yup'
+import * as Yup from "yup";
 
 // inputs
 import AppFormikInput from "utlis/helpers/forms/AppFormikInput";
 import AppFormikTextarea from "utlis/helpers/forms/AppFormikTextarea";
 import AppFormikSelect from "utlis/helpers/forms/AppFormikSelect";
 
-export default function ShippingInfo(props) {
+// temprory files
+import { userAddressArray } from "../TEMP_FILES";
 
+export default function ShippingInfo(props) {
     // states
-    const [modalShow, setModalShow] = useState(false)
-    const [modalType, setModalType] = useState("create")
+    const [userAddresses, setUserAddresses] = useState(userAddressArray);
+    const [modalShow, setModalShow] = useState(false);
+    const [modalType, setModalType] = useState("create");
 
     // moda show
-    const showModal = (ev, type) => {
-        ev.preventDefault()
+    const showModal = (ev, type, id = null) => {
+        ev.preventDefault();
         if (type) {
             // setting modal type
-            setModalType(type)
+            setModalType(type);
 
             // showing modal
-            setModalShow(true)
+            setModalShow(true);
         }
-    }
+
+        if (id) {
+            console.log("id ", id);
+        }
+    };
 
     // moda hide
     const hideModal = () => {
-        setModalShow(false)
-    }
+        setModalShow(false);
+    };
 
     // on modal open
     const onModalEntered = () => {
         console.log("modalType", modalType);
 
-        if(modalType === "edit") {
-            
+        if (modalType === "edit") {
         }
-    }
+    };
 
     // on modal open
     const onModalExited = () => {
         console.log("hidden", "modalType");
-    }
+    };
 
     // initial form values
     const initialFormValues = {
@@ -75,40 +81,39 @@ export default function ShippingInfo(props) {
         city: "",
         zipCode: "",
         country: "",
-    }
+    };
 
     // handle form validations
     const formValidationSchema = Yup.object({
         businessName: Yup.string(),
-        firstName: Yup.string().required('This field is required'),
-        lastName: Yup.string().required('This field is required'),
-        email: Yup.string().required('This field is required'),
-        mobile: Yup.string().required('This field is required'),
-        address: Yup.string().required('This field is required'),
+        firstName: Yup.string().required("This field is required"),
+        lastName: Yup.string().required("This field is required"),
+        email: Yup.string().required("This field is required"),
+        mobile: Yup.string().required("This field is required"),
+        address: Yup.string().required("This field is required"),
         streetAddress: Yup.string(),
-        state: Yup.string().required('This field is required'),
-        city: Yup.string().required('This field is required'),
-        zipCode: Yup.string().required('This field is required'),
-        country: Yup.string().required('This field is required'),
-    })
+        state: Yup.string().required("This field is required"),
+        city: Yup.string().required("This field is required"),
+        zipCode: Yup.string().required("This field is required"),
+        country: Yup.string().required("This field is required"),
+    });
 
-    const onFormSubmit = values => {
+    const onFormSubmit = (values) => {
         // if all the values present
         if (values) {
             // moving to the show shipping info page
-            window.scrollTo(0, 0)
-            showShippingInfo()
+            window.scrollTo(0, 0);
+            showShippingInfo();
         }
-    }
+    };
 
     // formik hook
     const formik = useFormik({
         initialValues: initialFormValues,
         validationSchema: formValidationSchema,
         onSubmit: onFormSubmit,
-        enableReinitialize: true
-    })
-
+        enableReinitialize: true,
+    });
 
     return (
         <div className={`${checkoutStyles["tab-item"]}`}>
@@ -118,40 +123,77 @@ export default function ShippingInfo(props) {
 
             {/* shipping info form */}
             <div className={`${checkoutStyles["shipping-info-form"]}`}>
-
                 {/* address box */}
                 <div
                     className={`${checkoutStyles["address-boxes"]} d-flex flex-wrap`}
                 >
-                    <div
-                        className={`${checkoutStyles["address-box"]}`}
-                    >
-                        <div
-                            className={`${checkoutStyles["inner"]} bg-white border`}
-                        >
-                            <p className="border-bottom d-flex align-items-center st-fw-700 st-fs-13">
-                                <FeatherIcon
-                                    icon="check"
-                                    size="16"
-                                    className={`${checkoutStyles["icon"]} position-relative`}
-                                />
-                                <span className="ms-1">Default</span>
-                            </p>
-                            <div className="mb-3">
-                                <p className="st-fs-13 mb-0">
-                                    <b>Reese Knight</b> <br />
-                                    <i>4601 Gold Spike Road</i> <br />
-                                    <i>Portola, California - 96122, United States</i> <br />
-                                    <b>Ph:</b> 1122332233
-                                </p>
-                            </div>
+                    {
+                        /* address box main */
+                        userAddresses?.length && userAddresses.map(item => (
+                            <React.Fragment key={item.id}>
+                                <div className={`${checkoutStyles["address-box"]}`}>
+                                    <div className={`${checkoutStyles["inner"]} bg-white border`}>
+                                        {
+                                            /* is default or not */
+                                            item.isDefault ? (
+                                                <p className="border-bottom d-flex align-items-center st-fw-700 st-fs-13">
+                                                    <FeatherIcon
+                                                        icon="check"
+                                                        size="16"
+                                                        className={`${checkoutStyles["icon"]} position-relative`}
+                                                    />
+                                                    <span className="ms-1">Default</span>
+                                                </p>
+                                            ) : null
+                                        }
 
-                            <a className="st-fw-700 st-fs-14 st-text-primary text-decoration-none cursor-pointer" onClick={(ev) => showModal(ev, "edit")}>Edit</a>
-                        </div>
-                    </div>
+                                        {/* adress main */}
+                                        <div className="mb-3">
+                                            <div className="st-fs-13 mb-0">
+                                                <div dangerouslySetInnerHTML={{ __html: item.address }}></div>
+                                            </div>
+                                        </div>
 
+                                        {/* edit button */}
+                                        <div className="btns d-flex">
+                                            <a
+                                                className="st-fw-600 st-fs-14 st-text-primary text-decoration-none cursor-pointer me-2"
+                                                onClick={(ev) =>
+                                                    showModal(
+                                                        ev,
+                                                        "edit",
+                                                        item.id
+                                                    )
+                                                }
+                                            >
+                                                Edit
+                                            </a>
+
+                                            {
+                                                /* is default or not */
+                                                !item.isDefault ? (
+                                                    <a
+                                                        className="st-fw-600 st-fs-14 st-text-primary text-decoration-none cursor-pointer"
+                                                    >
+                                                        Make Default
+                                                    </a>
+                                                ) : null
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </React.Fragment>
+                        ))
+                    }
+
+                    {/* new address */}
                     <div className="w-100">
-                        <button type="button" className="st-btn st-fw-600 text-uppercase" onClick={(ev) => showModal(ev, "add")}>
+                        <button
+                            type="button"
+                            className="st-btn st-fw-600 text-uppercase"
+                            onClick={(ev) => showModal(ev, "add")}
+                        >
                             Add new shipping address
                         </button>
                     </div>
@@ -172,27 +214,31 @@ export default function ShippingInfo(props) {
                 onHide={hideModal}
                 onExited={onModalExited}
                 onEntered={onModalEntered}
-                className="st-modal">
+                className="st-modal"
+            >
                 {/* body */}
                 <Modal.Body className="position-relative">
                     <form
                         onSubmit={formik.handleSubmit}
                         noValidate
-                        autoComplete="off">
+                        autoComplete="off"
+                    >
                         {/* modal header */}
                         <div className="st-modal-header d-flex align-items-center">
-                            <p className="text-capitalize st-fw-600 st-fs-19 mb-0 media-body pe-3">Shipping Info</p>
-                            <div className="icon cursor-pointer" onClick={hideModal} title="close modal">
-                                <FeatherIcon
-                                    icon="x"
-                                    size="16"
-                                />
+                            <p className="text-capitalize st-fw-600 st-fs-19 mb-0 media-body pe-3">
+                                Shipping Info
+                            </p>
+                            <div
+                                className="icon cursor-pointer"
+                                onClick={hideModal}
+                                title="close modal"
+                            >
+                                <FeatherIcon icon="x" size="16" />
                             </div>
                         </div>
 
                         {/* modal content */}
                         <div className="st-modal-content">
-
                             <div className="d-flex flex-wrap">
                                 {/* form field */}
                                 <AppFormikInput
@@ -323,13 +369,14 @@ export default function ShippingInfo(props) {
 
                         {/* modal footer */}
                         <div className="st-modal-footer d-flex justify-content-end">
-                            <button type="submit" className="st-btn st-fw-600 text-uppercase">
+                            <button
+                                type="submit"
+                                className="st-btn st-fw-600 text-uppercase"
+                            >
                                 Save Address
                             </button>
                         </div>
-
                     </form>
-
 
                     {/* div.loader */}
                     <div className="modal-loading position-absolute h-100 w-100 d-flex align-items-center justify-content-center">

@@ -45,7 +45,9 @@ export default function HeaderMenuItem(props) {
             data-index={menuItemIndex}
             className="st-sub-menu-nav-item position-relative"
         >
-            <Link href={`/products/${(menuItem.parent_id !== 0) ? catName + "/" : ""}${menuItem.category_url}?id=${menuItem.category_id}`}>
+            <Link
+                href={`/shop/${menuItem.category_url}?id=${menuItem.category_id}`}
+            >
                 <a className="st-sub-menu-nav-link d-block text-decoration-none text-uppercase d-flex align-items-center">
                     <span className="media-body">{menuItem.category_name}</span>
                     {menuItem?.sub_categories?.length ? (

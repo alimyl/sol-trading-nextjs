@@ -152,3 +152,6 @@ export const ADDED_TO_CART_SUCCESSFULLY = "Item succesfully added to your cart"
 export const ERROR_WHILE_SAVING_PRODUCT_TO_CART = "Unknow error occured while updating the cart. please try again"
 export const DELETED_FROM_CART_SUCCESSFULLY = "Item deleted succesfully"
 export const ERROR_WHILE_DELETING_PRODUCT_TO_CART = "Unknow error occured while deleting. please try again"
+
+// newly created
+export const LOGIN_SUCCESS = "You are successfully logged in"

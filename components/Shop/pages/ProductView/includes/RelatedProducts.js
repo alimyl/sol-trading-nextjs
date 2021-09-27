@@ -179,7 +179,7 @@ export default function RelatedProducts(props) {
                                         <div className="inner text-center">
                                             {/* image */}
                                             <Link href={{
-                                                pathname: "/product-details/" + item.sku,
+                                                pathname: "/product/" + item.sku,
                                                 // query: { currentCategory: props.currentCategory }
                                             }}>
                                                 <a className="product-img text-decoration-none d-flex align-items-center justify-content-center border p-2"
@@ -197,7 +197,7 @@ export default function RelatedProducts(props) {
                                             <div className="product-details mt-2">
                                                 <div className="name">
                                                     <Link href={{
-                                                        pathname: "/product-details/" + item.sku,
+                                                        pathname: "/product/" + item.sku,
                                                         // query: { currentCategory: props.currentCategory }
                                                     }}>
                                                         <a className="text-decoration-none st-text-light st-fw-600" title={item.name}>

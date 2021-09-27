@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 // redux
 import { connect } from "react-redux";
 
+// router
+import Router from "next/router";
 // nextjs - link
 import Link from "next/link";
 // nextjs - image
@@ -13,6 +15,9 @@ import { Container, Spinner } from "react-bootstrap";
 
 // auth styles
 import authStyles from "../styles/auth.module.scss";
+
+// react toastify
+import { toast } from "react-toastify";
 
 // common components
 import BreadCrumbs from "components/CommonComponents/BreadCrumbs";
@@ -31,7 +36,30 @@ import AppFormikInput from "utlis/helpers/forms/AppFormikInput";
 // api work
 import { userLogin } from "utlis/Apis/Auth_API";
 
-export default function Login(props) {
+// helpers | common
+import {
+    getFromLocalStorage,
+    saveToLocalStorage,
+} from "utlis/helpers/Common/CommonHelperFunctions";
+
+// redux actions
+import { setGlobalLoading } from "redux/actions/actionCommon";
+import {
+    saveCommonTokenToStore,
+    saveCurrentUserToStore,
+} from "redux/actions/actionAuth";
+
+// app messages
+import {
+    ERROR_WHILE__NAME,
+    UNKNOWN_ERROR_OCCURED,
+    LOGIN_SUCCESS,
+} from "utlis/AppMessages/AppMessages";
+
+function Login(props) {
+    // props
+    const { globalLoading } = props;
+
     // states
     const [currentRoute, setCurrentRoute] = useState({}); // { routeName: 'name of the route', routeUrl: 'url of the route' }
     const [buttonLoading, setButtonLoading] = useState(false);
@@ -64,8 +92,6 @@ export default function Login(props) {
     const onFormSubmit = (values) => {
         // if all the values present
         if (values) {
-            console.log("values ", values);
-
             // enabling button loading and disabling button
             setButtonDisable(true);
             setButtonLoading(true);
@@ -74,10 +100,71 @@ export default function Login(props) {
             userLogin(values.email, values.password)
                 .then((res) => {
                     console.log("userLogin res ", res);
+                    const resData = res.data;
 
-                    // disabling button loading and enabling button
-                    setButtonDisable(false);
-                    setButtonLoading(false);
+                    // if the request is success
+                    if (resData.success) {
+                        const userData = resData.data;
+                        const TEMPRORY_ORDER_ID = "112UUID_KJD";
+                        const userToken = `${userData.user_id}.${TEMPRORY_ORDER_ID}.secure`;
+                        const currentUser = {
+                            canExpire: true,
+                            email: userData.email,
+                            firstName: userData.first_name,
+                            lastName: userData.last_name,
+                            loggedOn: new Date(),
+                            tempOrderId: TEMPRORY_ORDER_ID,
+                            userId: userData.user_id,
+                            userToken,
+                        };
+
+                        // saving user to store
+                        saveCurrentUserToStore(currentUser);
+
+                        // saving token to store
+                        saveCommonTokenToStore(userToken);
+
+                        // then saving the user to the local storage
+                        saveToLocalStorage(
+                            "__uu_dd",
+                            JSON.stringify(currentUser)
+                        );
+
+                        // disabling button loading
+                        setButtonLoading(false);
+                        // dismissing all the previous toasts first
+                        toast.dismiss();
+
+                        // showing the error message
+                        toast.success(LOGIN_SUCCESS, {
+                            autoClose: 2000,
+                            onClose: () => {
+                                // enabling button
+                                setButtonDisable(false);
+
+                                // redirecting to home screen
+                                Router.push("/home");
+                            },
+                        });
+                    }
+
+                    // if there's any error
+                    if (resData.error) {
+                        // disabling button loading
+                        setButtonLoading(false);
+
+                        // dismissing all the previous toasts first
+                        toast.dismiss();
+
+                        // showing the error message
+                        toast.error(resData.message, {
+                            autoClose: 2500,
+                            onClose: () => {
+                                // enabling button
+                                setButtonDisable(false);
+                            },
+                        });
+                    }
                 })
                 .catch((err) => {
                     console.log("userLogin err ", err);
@@ -202,3 +289,21 @@ export default function Login(props) {
         </div>
     );
 }
+
+const getDataFromStore = (state) => {
+    return {
+        globalLoading: state.common.globalLoading,
+    };
+};
+
+const dispatchActionsToProps = (dispatch) => {
+    return {
+        setGlobalLoading: (bool) => dispatch(setGlobalLoading(bool)),
+        saveCommonTokenToStore: (token) =>
+            dispatch(saveCommonTokenToStore(token)),
+        saveCurrentUserToStore: (user) =>
+            dispatch(saveCurrentUserToStore(user)),
+    };
+};
+saveCommonTokenToStore;
+export default connect(getDataFromStore, dispatchActionsToProps)(Login);

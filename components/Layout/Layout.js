@@ -83,7 +83,7 @@ function Layout(props) {
                     setGlobalLoading(false);
 
                     const resData = res.data;
-                    console.log("cart items from getCartItems ", resData);
+                    // console.log("cart items from getCartItems ", resData);
 
                     // if response in success
                     if (resData.success) {
@@ -91,7 +91,7 @@ function Layout(props) {
                         let cartItems = [];
 
                         // generating items
-                        console.log("cartData ", cartData)
+                        console.log("cartData ", cartData);
                         cartData?.content.forEach((item) =>
                             cartItems.push({
                                 cart_id: item.cart_id,
@@ -124,59 +124,8 @@ function Layout(props) {
                     console.log("err while getting cart items", err);
                 });
         } else {
-            // IF USER DOESN'T IN LOCAL STORAGE,
-            // then saving a temprory user in the local storage
-            saveToLocalStorage("__uu_dd", NEW_TEMPRORY_USER);
-
-            // saving user details to global store
-            saveCommonTokenToStore(userDetails.userToken);
-            saveCurrentUserToStore(userDetails);
-
-            // getting cart details
-            getCartItems(userDetails.userToken, userDetails.tempOrderId)
-                .then((res) => {
-                    // disabling global loading
-                    setGlobalLoading(false);
-
-                    const resData = res.data;
-                    console.log("cart items from getCartItems ", resData);
-
-                    // if response in success
-                    if (resData.success) {
-                        const cartData = resData.data;
-                        let cartItems = [];
-
-                        // generating items
-                        cartData?.content.forEach((item) =>
-                            cartItems.push({
-                                cart_id: item.cart_id,
-                                combinations: item.combinations,
-                                price: item.price,
-                                totalPrice: item.price * item.quantity,
-                                product_id: item.product_id,
-                                product_name: item.product_name,
-                                quantity: item.quantity,
-                                sku: item.sku,
-                                temp_order_id: item.temp_order_id,
-                                user_id: item.user_id,
-                            })
-                        );
-
-                        // saving items to global store
-                        setCartItem(cartItems);
-                        setCartDetails({
-                            cart_items: cartData.cart_items,
-                            cart_qty: cartData.cart_qty,
-                            cart_total: cartData.cart_total,
-                        });
-                    }
-                    // if response has errors
-                    if (resData.error) {
-                    }
-                })
-                .catch((err) => {
-                    console.log("err while getting cart items", err);
-                });
+            // enabling global loading
+            setGlobalLoading(false);
         }
 
         return () => {

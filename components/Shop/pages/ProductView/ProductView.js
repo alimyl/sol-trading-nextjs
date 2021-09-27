@@ -128,7 +128,7 @@ export default function ProductView(props) {
             setCurrentRouteArray([
                 {
                     routeName: productId,
-                    routeUrl: `/product-details/${productId}?id=${id}`,
+                    routeUrl: `/product/${productId}?id=${id}`,
                 },
             ]);
         }

@@ -21,7 +21,7 @@ import HeaderCart from "./HeaderCart";
 // main component function
 function HeaderTopBar(props) {
     // consts
-    const { cartItems, cartDetails } = props;
+    const { cartItems, cartDetails, currentUser } = props;
 
     // state variables
     const [cartDropdownVisibility, setcartDropdownVisibility] = useState(false);
@@ -78,31 +78,49 @@ function HeaderTopBar(props) {
                     {/* rt sec */}
                     <div className="rt-sec ms-auto">
                         <div className="inner d-flex align-items-center">
-                            {/* link */}
-                            <Link href="/login">
-                                <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
-                                    <FeatherIcon
-                                        icon="user"
-                                        size="15"
-                                        className="position-relative me-2"
-                                        style={{ top: 1 }}
-                                    />
-                                    <span>Login</span>
-                                </a>
-                            </Link>
+                            {currentUser ? (
+                                <Link href="/my-account">
+                                    <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
+                                        <FeatherIcon
+                                            icon="user"
+                                            size="15"
+                                            className="position-relative me-2"
+                                            style={{ top: 1 }}
+                                        />
+                                        <span>
+                                            Welcome {currentUser.firstName}
+                                        </span>
+                                    </a>
+                                </Link>
+                            ) : (
+                                <>
+                                    {/* link */}
+                                    <Link href="/login">
+                                        <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
+                                            <FeatherIcon
+                                                icon="user"
+                                                size="15"
+                                                className="position-relative me-2"
+                                                style={{ top: 1 }}
+                                            />
+                                            <span>Login</span>
+                                        </a>
+                                    </Link>
 
-                            {/* link */}
-                            <Link href="/register">
-                                <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
-                                    <FeatherIcon
-                                        icon="user-plus"
-                                        size="15"
-                                        className="position-relative me-2"
-                                        style={{ top: 1 }}
-                                    />
-                                    <span>Register</span>
-                                </a>
-                            </Link>
+                                    {/* link */}
+                                    <Link href="/register">
+                                        <a className="htb_link text-decoration-none st-fs-13 st-text-light d-flex align-items-center me-3">
+                                            <FeatherIcon
+                                                icon="user-plus"
+                                                size="15"
+                                                className="position-relative me-2"
+                                                style={{ top: 1 }}
+                                            />
+                                            <span>Register</span>
+                                        </a>
+                                    </Link>
+                                </>
+                            )}
 
                             <div
                                 className={`${
@@ -140,6 +158,7 @@ function HeaderTopBar(props) {
 
 const getDataFromStore = (state) => {
     return {
+        currentUser: state.auth.currentUser,
         cartItems: state.cart.cartItems,
         cartDetails: state.cart.cartDetails,
     };

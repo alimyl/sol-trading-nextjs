@@ -7,7 +7,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 // listing page
-import ProductView from 'components/Products/pages/ProductView'
+import ProductView from 'components/Shop/pages/ProductView'
 
 function productId() {
     // consts

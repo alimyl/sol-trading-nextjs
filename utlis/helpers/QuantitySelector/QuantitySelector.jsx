@@ -21,6 +21,8 @@ export default function QuantitySelector(props) {
         maxQuantityMsg,
     } = props
 
+    console.log("props ", props);
+
     // consts
     const TOAST_TIME = 1800
     const ACTION_ADD = "add"
@@ -46,7 +48,7 @@ export default function QuantitySelector(props) {
         if (action === ACTION_ADD) {
             if (inputVal >= 1) {
                 // if max quantity is defined
-                if (inputVal >= maxQuantity) {
+                if (maxQuantity && (inputVal >= maxQuantity)) {
                     // if default value is greter than the allowed value, setting the max allowed value to the input
                     if (inputVal > maxQuantity) {
                         let updatedValue = parseInt(maxQuantity)
@@ -87,7 +89,7 @@ export default function QuantitySelector(props) {
         if (action === ACTION_SUBTRACT) {
             if (inputVal > 1) {
                 // if min quantity is defined
-                if (inputVal <= minQuantity) {
+                if (minQuantity && (inputVal <= minQuantity)) {
                     // if default value is lesser than the allowed value, setting the min allowed value to the input
                     if (inputVal < minQuantity) {
                         let updatedValue = parseInt(minQuantity)
